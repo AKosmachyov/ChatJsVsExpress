@@ -1,0 +1,41 @@
+
+
+.textInArea{
+    word-break: break-all;
+}
+.messageViewArea{
+     border: 2px ridge lightgray;
+     overflow: auto;
+    height: 500px;
+}
+.change-color-message{
+    border-left: 2px solid indianred;
+    margin-left:1%;
+    word-wrap: break-word;
+}
+
+.messageArea{
+    width:550px; 
+    height: 80px; /* Высота поля в пикселах */
+    resize: none;   
+}
+.text-area{
+    width: 60%;
+    margin-right: 20%;
+    margin-left: 20%;
+    margin-top : 20px;
+}
+.text-align-right{
+    text-align: right;
+}
+.users-photo{
+    width: 100px;
+    height:100px;
+}
+.modal-body-optionarea{ 
+    margin: 1% 3%;
+}
+.cursor
+{
+    cursor: default; 
+}

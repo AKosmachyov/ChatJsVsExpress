@@ -1,0 +1,46 @@
+<div class="modal fade" id="registerModul" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" ng-controller="loginCtrl">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Регистрация</h4>
+      </div>
+      <div class="modal-body">
+                 <form class="form-horizontal" id="registerForm">
+                       <div class="form-group has-feedback" ng-class="{ 'has-error': !userName, 'has-success': userName}">
+                           <label for="InputName" class="col-sm-2">Имя</label>
+                           <div class="col-sm-9">
+                                <input type="text" class="form-control" ng-model="userName" id="InputName" placeholder="Jane Doe" required>
+                                <span class="glyphicon form-control-feedback" ng-class="{ 'glyphicon-remove': !userName, 'glyphicon-ok': userName}" ></span>
+                           </div>
+                       </div>
+                       <div class="form-group has-feedback" ng-class="{ 'has-error': !userEmail, 'has-success': userEmail}">
+                           <label for="InputEmailReg" class="col-sm-2">Email</label>
+                           <div class="col-sm-9">
+                                <input type="email" class="form-control" ng-model="userEmail" id="InputEmailReg" placeholder="jane.doe@example.com" required>
+                                <span class="glyphicon form-control-feedback" ng-class="{ 'glyphicon-remove': !userEmail, 'glyphicon-ok': userEmail}"></span>
+                           </div>
+                       </div>
+                       <div class="form-group has-feedback" ng-class="{ 'has-error': !userPassword, 'has-success': userPassword}">
+                           <label for="InputPasswordReg1" class="col-sm-2">Пароль</label>
+                           <div class="col-sm-9">
+                                <input type="password" class="form-control" ng-model="userPassword" id="InputPasswordReg1" placeholder="12345678" required>
+                                <span class="glyphicon form-control-feedback" ng-class="{ 'glyphicon-remove': !userPassword, 'glyphicon-ok': userPassword}" ></span>
+                           </div>
+                       </div>
+                         <div class="form-group has-feedback" ng-class="{'has-error':(userRepitPassword!=userPassword || !userRepitPassword), 'has-success': (userRepitPassword || userRepitPassword==userPassword)}">
+                           <label for="InputPasswordReg2" class="col-sm-2">Повторите пароль</label>
+                           <div class="col-sm-9">
+                                <input type="password" class="form-control" ng-model="userRepitPassword" id="InputPasswordReg2" placeholder="12345678" required>
+                                <span class="glyphicon form-control-feedback" ng-class="{'glyphicon-remove':(userRepitPassword!=userPassword || !userRepitPassword), 'glyphicon-ok': (userRepitPassword || userRepitPassword==userPassword)}" ></span>
+                           </div>
+                        </div>           
+                 </form>      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+        <button type="submit" class="btn btn-default" form="registerForm" ng-class="{'disabled':(!userPassword || userRepitPassword!=userPassword)}" ng-click="register(userName,userEmail,userPassword,'registerModul')">Зарегистрироваться</button>
+      </div>
+    </div>
+  </div>
+</div>
