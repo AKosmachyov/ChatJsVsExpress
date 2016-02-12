@@ -19,7 +19,7 @@
     this.sentMessage=function(name,message){
         
          _store.push(_message(name,message));
-         console.log(_store);
+         
         
     };
     this.getAllMessage=function(){
