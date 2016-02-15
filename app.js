@@ -4,12 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var file=require(__dirname+'/model/handlerFile');
 
 
 
-var userDB={};
-userDB['name@email.com']={name:"Ale",password:"12345"};
+var oldUser={};
 
+file.read().then(function (a) {
+    oldUser=a;
+});
 
 var app = express();
 
@@ -29,36 +32,37 @@ app.get('/', function(req, res) {
 });
 
 app.post('/test',function(req,res){
-    res.send(userDB['name@email.com'].name);
+    res.send(oldUser['name@email.com'].name);
 });
 app.post('/login',urlencodedParser,function(req,res){
-   
-    if(!!userDB[req.body.login]){
-        if(req.body.password==userDB[req.body.login].password){
-            res.send(userDB[req.body.login].name);
+    if(!!oldUser[req.body.login]){
+        if(req.body.password==oldUser[req.body.login].password){
+            res.send(oldUser[req.body.login].name);
         }else{
            res.status(302).send("ErrorIn");
-        };     
-    }else{        
-        
-        res.status(203).send("ErrorEmail");
-       
-    };
-    
+        }
+    }else{
+        if(!!file.newUser[req.body.login]){
+            if(req.body.password==file.newUser[req.body.login].password){
+                res.send(file.newUser[req.body.login].name);
+            }else{
+                res.status(302).send("ErrorIn");
+            }
+        }else{
+            res.status(203).send("ErrorEmail");
+        }
+    };    
 });
-app.post('/register',urlencodedParser,function(req,res){
-     
-    if(!!userDB[req.body.login]){
+app.post('/register',urlencodedParser,function(req,res){     
+    if((!!oldUser[req.body.login])||(!!file.newUser[req.body.login])){
         res.status(302).send("ErorEmail");
-    }else{        
-        userDB[req.body.login]={
+    }else{
+        file.newUser[req.body.login]={
             name:req.body.name,
             password:req.body.password
         };
         res.send(req.body.name);
-        
-    };
-    
+    };    
 });
 
 
@@ -95,3 +99,4 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
