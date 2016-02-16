@@ -25,7 +25,7 @@
                 <button type="button" class="btn btn-primary pull-right" data-toggle="modal" 
                 data-target="#registerModul">Регистрация</button>
                 <button type="button" class="btn btn-primary pull-right" data-toggle="modal" 
-                data-target="#logInModul">Войти</button>
+                data-target="#logInModul" id="buttonLogIn_">Войти</button>
             </div>
             
             <!--Кнопки Пользователя-->
@@ -33,7 +33,7 @@
                 <div class="form-inline dropdown cursor" onselectstart="return false" onmousedown="return false">
                     
                     <!-- Кнопка очистки-->
-                <button class="btn btn-default" ng-click="clearMessageHistory()">Очистка</button>               
+                <button class="btn btn-default" id="buttonClearChat"ng-click="clearMessageHistory()">Очистка</button>               
                     <span for="dropdownMenu">Привет:</span>
                     <span class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown">
                         <b>{{getNameUser()}}</b>
@@ -47,7 +47,7 @@
                         </li>
                         <li role="separator" class="divider"></li>
                         <li>
-                            <a ng-click="logOut()">
+                            <a ng-click="logOut()" id="liLogOut">
                                 <i class="glyphicon glyphicon-off"></i> Выйти
                             </a>
                         </li>

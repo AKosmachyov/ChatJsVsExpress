@@ -4,12 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-
-
-var userDB={};
-userDB['name@email.com']={name:"Ale",password:"12345"};
-
+var file=require(__dirname+'/model/handlerFile');
 
 var app = express();
 
@@ -28,37 +23,27 @@ app.get('/', function(req, res) {
    
 });
 
-app.post('/test',function(req,res){
-    res.send(userDB['name@email.com'].name);
-});
 app.post('/login',urlencodedParser,function(req,res){
-   
-    if(!!userDB[req.body.login]){
-        if(req.body.password==userDB[req.body.login].password){
-            res.send(userDB[req.body.login].name);
-        }else{
-           res.status(302).send("ErrorIn");
-        };     
-    }else{        
-        
-        res.status(203).send("ErrorEmail");
-       
-    };
-    
+    try {
+        res.send(file.login(req.body));
+    }catch (err){
+       if(err.value==204)
+           res.status(204).send();
+       if(err.value==301)
+           res.status(301).send();
+       if(err.value==400)
+           res.status(400).send();
+    }
 });
 app.post('/register',urlencodedParser,function(req,res){
-     
-    if(!!userDB[req.body.login]){
-        res.status(302).send("ErorEmail");
-    }else{        
-        userDB[req.body.login]={
-            name:req.body.name,
-            password:req.body.password
-        };
-        res.send(req.body.name);
-        
-    };
-    
+    try {
+        res.send(file.addNewUser(req.body))
+    }catch (err){
+        if(err.value==203)
+            res.status(203).send();
+        if(err.value==400)
+            res.status(400).send();
+    }
 });
 
 
@@ -95,3 +80,4 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+
