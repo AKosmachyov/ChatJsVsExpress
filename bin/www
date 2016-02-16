@@ -38,7 +38,7 @@ server.on('listening', onListening);
 
 process.on('SIGINT', function() {
   console.log('key determinate detected');
-  file.saveNewUser();
+  file.saveNewUsers();
   //setTimeout(function () {
     sockets.forEach(function (socet) {
       socet.destroy();

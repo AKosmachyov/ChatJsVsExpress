@@ -6,14 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var file=require(__dirname+'/model/handlerFile');
 
-
-
-var oldUser={};
-
-file.read().then(function (a) {
-    oldUser=a;
-});
-
 var app = express();
 
 app.set('view engine', 'ejs');
@@ -31,38 +23,27 @@ app.get('/', function(req, res) {
    
 });
 
-app.post('/test',function(req,res){
-    res.send(oldUser['name@email.com'].name);
-});
 app.post('/login',urlencodedParser,function(req,res){
-    if(!!oldUser[req.body.login]){
-        if(req.body.password==oldUser[req.body.login].password){
-            res.send(oldUser[req.body.login].name);
-        }else{
-           res.status(302).send("ErrorIn");
-        }
-    }else{
-        if(!!file.newUser[req.body.login]){
-            if(req.body.password==file.newUser[req.body.login].password){
-                res.send(file.newUser[req.body.login].name);
-            }else{
-                res.status(302).send("ErrorIn");
-            }
-        }else{
-            res.status(203).send("ErrorEmail");
-        }
-    };    
+    try {
+        res.send(file.login(req.body));
+    }catch (err){
+       if(err.value==204)
+           res.status(204).send();
+       if(err.value==301)
+           res.status(301).send();
+       if(err.value==400)
+           res.status(400).send();
+    }
 });
-app.post('/register',urlencodedParser,function(req,res){     
-    if((!!oldUser[req.body.login])||(!!file.newUser[req.body.login])){
-        res.status(302).send("ErorEmail");
-    }else{
-        file.newUser[req.body.login]={
-            name:req.body.name,
-            password:req.body.password
-        };
-        res.send(req.body.name);
-    };    
+app.post('/register',urlencodedParser,function(req,res){
+    try {
+        res.send(file.addNewUser(req.body))
+    }catch (err){
+        if(err.value==203)
+            res.status(203).send();
+        if(err.value==400)
+            res.status(400).send();
+    }
 });
 
 
