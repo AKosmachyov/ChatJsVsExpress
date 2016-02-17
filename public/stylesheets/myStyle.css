@@ -39,3 +39,6 @@
 {
     cursor: default; 
 }
+a.disabled {
+    pointer-events: none;
+}

@@ -81,9 +81,9 @@
                                         </div>
                                     </div>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuMessage"
-                                        onmousedown="return false" onselectstart="return false">
+                                        onmousedown="return false">
                                         <li ng-class="{'disabled':(repitmessage.from != getNameUser())}">
-                                            <a ng-click="deleteMessage(repitmessage)">
+                                            <a ng-click="deleteMessage(repitmessage)" ng-class="{'disabled':(repitmessage.from != getNameUser())}">
                                                 Удалить
                                             </a>
                                         </li>
