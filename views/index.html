@@ -12,87 +12,110 @@
     <script type='text/javascript' src="/javascripts/myJs.js"></script>
     <script type="text/javascript" src="/javascripts/chat-store.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    
+
 </head>
 
 <body ng-app='Message'>
-    
-    <div class="container">
-        
-        <!--Кнопки входа-->
-        <div ng-controller="loginCtrl" class="row">
-            <div ng-if="!isAuthorize()">
-                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" 
-                data-target="#registerModul">Регистрация</button>
-                <button type="button" class="btn btn-primary pull-right" data-toggle="modal" 
-                data-target="#logInModul" id="buttonLogIn_">Войти</button>
-            </div>
-            
-            <!--Кнопки Пользователя-->
-            <div ng-if="isAuthorize()" class="pull-right">
-                <div class="form-inline dropdown cursor" onselectstart="return false" onmousedown="return false">
-                    
-                    <!-- Кнопка очистки-->
-                <button class="btn btn-default" id="buttonClearChat"ng-click="clearMessageHistory()">Очистка</button>               
-                    <span for="dropdownMenu">Привет:</span>
+
+<div class="container">
+    <!--Кнопки входа-->
+    <div ng-controller="loginCtrl" class="row">
+        {{getUserLocalStorage()}}
+        <div ng-if="!isAuthorize()">
+            <button type="button" class="btn btn-primary pull-right" data-toggle="modal"
+                    data-target="#registerModul">Регистрация
+            </button>
+            <button type="button" class="btn btn-primary pull-right" data-toggle="modal"
+                    data-target="#logInModul" id="buttonLogIn_">Войти
+            </button>
+        </div>
+
+        <!--Кнопки Пользователя-->
+        <div ng-if="isAuthorize()" class="pull-right">
+            <div class="form-inline dropdown cursor" onselectstart="return false" onmousedown="return false">
+
+                <!-- Кнопка очистки-->
+                <button class="btn btn-default" id="buttonClearChat" ng-click="clearMessageHistory()">Очистка</button>
+                <span for="dropdownMenu">Привет:</span>
                     <span class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown">
                         <b>{{getNameUser()}}</b>
                         <span class="caret"></span>
                     </span>
-                    <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu" >
-                        <li>
-                            <a data-toggle="modal" data-target="#profile">
-                                <i class="glyphicon glyphicon-user"></i> Профиль
-                            </a>
-                        </li>
-                        <li role="separator" class="divider"></li>
-                        <li>
-                            <a ng-click="logOut()" id="liLogOut">
-                                <i class="glyphicon glyphicon-off"></i> Выйти
-                            </a>
-                        </li>
+                <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu">
+                    <li>
+                        <a data-toggle="modal" data-target="#profile">
+                            <i class="glyphicon glyphicon-user"></i> Профиль
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a ng-click="logOut()" id="liLogOut">
+                            <i class="glyphicon glyphicon-off"></i> Выйти
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--Отображение и добавление сообщения-->
+    <div ng-controller="getmessageAllUser as message">
+        <div>
+            <div class="row">
+                <div class="col-md-2">
+                    <ul>
+                        <li>NickUser</li>
                     </ul>
                 </div>
-            </div>            
-        </div>
-        <!--Отображение и добавление сообщения-->
-        <div ng-controller="getmessageAllUser as message">
-            <div>
-                <div class="row">
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-8 messageViewArea">
-                        <div ng-repeat="repitmessage in message.chat track by $index">
-                            <div class="row">
-                                <p class="textInArea">{{repitmessage.from}}
-                                    <br>
-                                    <div class="change-color-message">
-                                        {{repitmessage.message}}
+                <div class="col-md-8 messageViewArea">
+                    <div ng-repeat="repitmessage in message.chat track by $index">
+                        <div class="row">
+                            <div class="">
+                                <div class="textInArea dropdown cursor"
+                                     ng-class="{'col-md-offset-6 col-md-6 ':(repitmessage.from==getNameUser())}">
+                                    <div class="dropdown-toggle" id="dropdownMenuMessage" data-toggle="dropdown">
+                                        {{repitmessage.from}}
+                                        <div class=" change-color-message">
+                                            {{repitmessage.message}}
+                                            <br>
+                                            {{repitmessage.date}}
+                                        </div>
                                     </div>
-                                </p>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuMessage"
+                                        onmousedown="return false" onselectstart="return false">
+                                        <li ng-class="{'disabled':(repitmessage.from != getNameUser())}">
+                                            <a ng-click="deleteMessage(repitmessage)">
+                                                Удалить
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                    </div>
                 </div>
-            </div>
-            <div class="row" >
-                <div class="col-md-8 text-area input-group">
-                    <textarea class="messageArea form-control custom-control" ng-keydown="keypress($event)" ng-disabled="!isAuthorize()" ng-model="newMessage"></textarea>
-                    <button class="btn btn-primary form-control" ng-class="{'disabled':!isAuthorize()}" 
-                    ng-click="addMessage(newMessage);newMessage='';">Отправить</button>                                     
+                <div class="col-md-2">
                 </div>
             </div>
         </div>
-        
-        <!-- Register -->
-        <div ng-include="'/modal/register.html'"></div>
-        <!-- LogIn -->
-        <div ng-include="'/modal/login.html'"></div>
-        <!-- Профиль -->
-        <div ng-include="'/modal/profile.html'"></div>
-        
+        <div class="row">
+            <div class="col-md-8 text-area input-group">
+                <textarea class="messageArea form-control custom-control" ng-keydown="keypress($event)"
+                          ng-disabled="!isAuthorize()" ng-model="newMessage"></textarea>
+                <button class="btn btn-primary form-control" ng-class="{'disabled':!isAuthorize()}"
+                        ng-click="addMessage(newMessage);newMessage='';">Отправить
+                </button>
+            </div>
+        </div>
     </div>
+
+    <!-- Register -->
+    <div ng-include="'/modal/register.html'"></div>
+    <!-- LogIn -->
+    <div ng-include="'/modal/login.html'"></div>
+    <!-- Профиль -->
+    <div ng-include="'/modal/profile.html'"></div>
+
+</div>
 </body>
 </html>
