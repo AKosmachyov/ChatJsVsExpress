@@ -10,7 +10,7 @@
 }
 .change-color-message{
     border-left: 2px solid indianred;
-    margin-left:1%;
+    margin-left:5%;
     word-wrap: break-word;
 }
 
@@ -38,4 +38,7 @@
 .cursor
 {
     cursor: default; 
+}
+a.disabled {
+    pointer-events: none;
 }

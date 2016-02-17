@@ -1,31 +1,35 @@
 (function(){
     var _store=[];
+    var _dataUser=[];
     var _currentUser;
-    function _message(to,message){
+    function _message(to,message,date){
         return {
             from:to,
             to:to,
             message:message,
-            data:new Date()
-            }
+            date:date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()
+        }
     }
-    //function saveState(){
-    //    localStorage.setItem('messageHistory',JSON.stringify(_store));
-    //};
-    //function restoreState(){
-    //  _store=JSON.parse(localStorage.getItem('messageHistory'))||[];
-    //};
-    
-    this.sentMessage=function(name,message){
-        
-         _store.push(_message(name,message));
-         
-        
+    this.getDataUser=function(){
+        return _dataUser;
+    };
+    function saveDataUser(){
+        localStorage.setItem('dataUser',JSON.stringify(_dataUser));
+    }
+    function restoreDataUser(){
+     _dataUser=JSON.parse(localStorage.getItem('dataUser'))||[];
+    }
+    this.clearDataUser=function(){
+        _dataUser.splice(0,_dataUser.length);
+        localStorage.setItem('dataUser',null)  ;
+    };
+    this.sentMessage=function(name,message,date){
+         _store.push(_message(name,message,date));
     };
     this.getAllMessage=function(){
         return _store;
     };
-    this.login=function(login,password,nameModul,update){
+    this.login=function(login, password, update){
         if(login && password){
             var xhr = new XMLHttpRequest();
             var body = 'login=' + encodeURIComponent(login) +  '&password=' + encodeURIComponent(password);
@@ -35,8 +39,8 @@
                 if (xhr.readyState == 4) { 
                         if(xhr.status == 200) {
                             _currentUser={name:xhr.responseText};
-                            update();
-                            $('#'+nameModul).modal('hide');
+                            _dataUser=[login,password];
+                            update('logInModul');
                             }
                         if(xhr.status==301){
                             alert("Невернеы данные");
@@ -51,7 +55,7 @@
             xhr.send(body);  
             }
     };
-    this.register=function(name,login,password,nameModul,update){
+    this.register=function(name, login, password, update){
           if(name && login && password ){  
               var xhr = new XMLHttpRequest();
              var body = 'name=' + encodeURIComponent(name) + '&login=' + encodeURIComponent(login)+ '&password=' + encodeURIComponent(password);
@@ -60,9 +64,10 @@
               xhr.onreadystatechange =function() { 
                 if (xhr.readyState == 4) { 
                     if(xhr.status == 200) {
+
                        _currentUser={name:xhr.responseText};
-                       update();
-                       $('#'+nameModul).modal('hide');
+                       update('registerModul');
+
                     }
                     if(xhr.status==203){
                         alert("Данный email зарегистрирован")
@@ -75,13 +80,24 @@
 
             xhr.send(body);  
             }
-    };      
+    };
     this.clearMessageHistory=function(){
         _store.splice(0,_store.length);
         localStorage.setItem('messageHistory',null)  ;
     };
+    this.deleteMessage=function(obj,up){
+        var i;
+        for(i=0;i<_store.length;i++) {
+            if((_store[i].from==obj.from)&&(_store[i].message==obj.message)&&(_store[i].date==obj.date)){
+                _store.splice(i,1);
+                up();
+                break;
+            }
+        }
+    };
     this.logOut=function(){
-         _currentUser=null;
+        _currentUser=null;
+        clearDataUser();
     };
     
     this.isAuthorize=function(){
@@ -92,10 +108,10 @@
         return _currentUser.name;
     };
     
-    //restoreState();
+    restoreDataUser();
     window.$chat=this;
     window.onbeforeunload = function () {
-       // saveState();
+       saveDataUser();
     };
     
 })();

@@ -1,1 +1,1 @@
-{"name@email.com":{"name":"Ale","password":"12345"},
+{"name@email.com":{"name":"Ale","password":"12345"},"login@mail.com":{"name":"Gust","password":"123"},

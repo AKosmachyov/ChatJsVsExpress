@@ -16,11 +16,10 @@ app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 app.get('/', function(req, res) {
        res.sendFile(path.join(__dirname + '/views/index.html'));
-   
 });
 
 app.post('/login',urlencodedParser,function(req,res){
