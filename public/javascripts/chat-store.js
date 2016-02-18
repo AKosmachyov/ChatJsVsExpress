@@ -2,6 +2,7 @@
     var _store=[];
     var _dataUser=[];
     var _currentUser;
+    var onlineUser;
     function _message(to,message,date){
         return {
             from:to,
@@ -24,7 +25,7 @@
         localStorage.setItem('dataUser',null)  ;
     };
     this.sentMessage=function(name,message,date){
-         _store.push(_message(name,message,date));
+        _store.push(_message(name,message,date));
     };
     this.getAllMessage=function(){
         return _store;
@@ -38,10 +39,14 @@
             xhr.onreadystatechange =function() { 
                 if (xhr.readyState == 4) { 
                         if(xhr.status == 200) {
-                            _currentUser={name:xhr.responseText};
+                            var answer=JSON.parse(xhr.responseText);
+                            _currentUser={name:answer.name};
+                            onlineUser=answer.onlineUser;
+                            console.log(onlineUser);
                             _dataUser=[login,password];
                             update('logInModul');
-                            }
+
+                        }
                         if(xhr.status==301){
                             alert("Невернеы данные");
                         }
@@ -95,9 +100,21 @@
             }
         }
     };
-    this.logOut=function(){
-        _currentUser=null;
-        clearDataUser();
+    this.logOut=function(up){
+        var xhr = new XMLHttpRequest();
+        var body='name=' + encodeURIComponent(_currentUser);
+        xhr.open("POST", '/logout', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange =function() {
+            if (xhr.readyState == 4) {
+                _currentUser=null;
+                clearDataUser();
+                up();
+                console.log(onlineUser);
+            }
+        };
+        xhr.send(body);
+
     };
     
     this.isAuthorize=function(){
@@ -105,7 +122,7 @@
     };
     
     this.getNameUser=function(){
-        return _currentUser.name;
+        return _currentUser && _currentUser.name;
     };
     
     restoreDataUser();

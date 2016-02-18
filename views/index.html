@@ -73,7 +73,7 @@
                                 <div class="textInArea dropdown cursor"
                                      ng-class="{'col-md-offset-6 col-md-6 ':(repitmessage.from==getNameUser())}">
                                     <div class="dropdown-toggle" id="dropdownMenuMessage" data-toggle="dropdown">
-                                        {{repitmessage.from}}
+                                        <img src="images/logo.jpg" class="img-rounded user-photo-chat ">{{repitmessage.from}}
                                         <div class=" change-color-message">
                                             {{repitmessage.message}}
                                             <br>
@@ -101,8 +101,9 @@
         <div class="row">
             <div class="col-md-8 text-area input-group">
                 <textarea class="messageArea form-control custom-control" ng-keydown="keypress($event)"
-                          ng-disabled="!isAuthorize()" ng-model="newMessage"></textarea>
-                <button class="btn btn-primary form-control" ng-class="{'disabled':!isAuthorize()}"
+                          ng-disabled="!isAuthorize()" ng-model="newMessage">
+                </textarea>
+                <button class="btn btn-primary form-control" ng-disabled="!isAuthorize()"
                         ng-click="addMessage(newMessage);newMessage='';">Отправить
                 </button>
             </div>

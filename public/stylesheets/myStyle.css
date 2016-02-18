@@ -32,6 +32,10 @@
     width: 100px;
     height:100px;
 }
+.user-photo-chat{
+    width: 32px;
+    height:32px;
+}
 .modal-body-optionarea{ 
     margin: 1% 3%;
 }

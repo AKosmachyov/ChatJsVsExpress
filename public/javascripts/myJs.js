@@ -15,6 +15,9 @@
             });
             socket.on('deleteMessage',function(messageObj){
                 $chat.deleteMessage(messageObj,up);
+            });
+            socket.on('addOnlineUsers', function (name) {
+               console.log(name);
             })
         }
         $scope.keypress = function($event) {
@@ -26,15 +29,17 @@
         };
         this.chat = $chat.getAllMessage();
         $scope.addMessage = function (value) {
-            var newValue = value.replace(/\s+/g, '');
-            if ($chat.isAuthorize() && newValue.length >= 1){
-                 messageFull={
-                     user:$chat.getNameUser(),
-                     message: value,
-                     date:new Date()
-                };
-                socket.emit('chat message',messageFull);
-                $chat.sentMessage(messageFull.user, messageFull.message,messageFull.date);
+            if(value.length>0) {
+                var newValue = value.replace(/\s+/g, '');
+                if ($chat.isAuthorize() && newValue.length >= 1) {
+                    messageFull = {
+                        user: $chat.getNameUser(),
+                        message: value,
+                        date: new Date()
+                    };
+                    socket.emit('chat message', messageFull);
+                    $chat.sentMessage(messageFull.user, messageFull.message, messageFull.date);
+                }
             }
         };
         $scope.deleteMessage= function (messageObj) {
@@ -61,7 +66,9 @@
         $scope.isAuthorize = $chat.isAuthorize;
         $scope.getNameUser = $chat.getNameUser;
 
-        $scope.logOut = $chat.logOut;
+        $scope.logOut =function() {
+            $chat.logOut(up);
+        };
         $scope.clearMessageHistory = $chat.clearMessageHistory;
         $scope.getUserLocalStorage=function(){
             if ($chat.getDataUser().length > 0&&temp) {

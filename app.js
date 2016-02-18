@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var file=require(__dirname+'/model/handlerFile');
+var onlineUsers=[];
 
 var app = express();
 
@@ -36,13 +37,17 @@ app.post('/login',urlencodedParser,function(req,res){
 });
 app.post('/register',urlencodedParser,function(req,res){
     try {
-        res.send(file.addNewUser(req.body))
+        res.send(file.addNewUser(req.body));
     }catch (err){
         if(err.value==203)
             res.status(203).send();
         if(err.value==400)
             res.status(400).send();
     }
+});
+app.post('/logout',urlencodedParser,function(req,res){
+    file.deleteOnlineUser(req.body.name);
+    res.send('ok');
 });
 
 

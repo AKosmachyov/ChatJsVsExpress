@@ -2,6 +2,7 @@ var fs = require('fs');
 
 var newUsers = {};
 var users = {};
+var onlineUsers=[];
 
 //Класс содания объекта пользователя
 function User(user) {
@@ -55,10 +56,24 @@ var userStorage = {
         if (isValidUserLogin(user)) {
             if(isUserExist(user.login)){
                 if(user.password===users[user.login].password){
-                    return users[user.login].name;
+                    if(onlineUsers.indexOf(users[user.login].name)<0) {
+                        onlineUsers.push(users[user.login].name)
+                    }
+                    var body={
+                        name:users[user.login].name,
+                        onlineUser:onlineUsers
+                    };
+                    return body;
                 }else{
                     if(user.password===newUsers[user.login].password) {
-                        return newUsers[user.login].name;
+                        if(onlineUsers.indexOf(newUsers[user.login].name)<0) {
+                            onlineUsers.push(newUsers[user.login].name)
+                        }
+                        var body={
+                            name:newUsers[user.login].name,
+                            onlineUser:onlineUsers
+                        };
+                        return body;
                     }else{
                         throw new ErrorHandler("Wrong data",301)
                     }
@@ -76,12 +91,16 @@ var userStorage = {
             listNewUser = listNewUser.slice(1, listNewUser.length - 1) + ',';
             fs.appendFileSync('store/storage.txt', listNewUser)
         }
+    },
+    deleteOnlineUser:function(name){
+        onlineUsers.splice(onlineUsers.indexOf(name,1));
     }
 };
 function ErrorHandler(message,code) {
     this.value = code;
     this.message = (message );
 }
+
 ErrorHandler.prototype = Error.prototype;
 
 restoreUsers().then(function (data) {
