@@ -153,7 +153,17 @@
     restoreDataUser();
     window.$chat = this;
     window.onbeforeunload = function () {
-        saveDataUser();
+
+        var xhr = new XMLHttpRequest();
+        var body = 'name=' + encodeURIComponent(_currentUser.name);
+        xhr.open("POST", '/logout', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                saveDataUser();
+            }
+        };
+        xhr.send(body);
     };
 
 })();

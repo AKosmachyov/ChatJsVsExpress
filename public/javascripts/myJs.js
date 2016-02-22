@@ -7,7 +7,7 @@
         var socket;
         var messageFull;
         if (!socket) {
-            socket = io.connect('http://localhost:8000');
+            socket = io.connect('http://192.168.15.25:8000');
             socket.on('chat message', function (data) {
                 var date=new Date(data.date);
                 $chat.sentMessage(data.user, data.message,date);
