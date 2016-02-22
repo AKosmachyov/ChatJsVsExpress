@@ -46,3 +46,11 @@
 a.disabled {
     pointer-events: none;
 }
+
+html {
+    overflow-x: hidden;
+}
+
+.ng-pageslide {
+    background: #eee;
+}
