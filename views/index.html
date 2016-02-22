@@ -3,16 +3,17 @@
 <head>
     <meta charset="utf-8">
 
-    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
-    <link rel="stylesheet" href="/stylesheets/bootstrap-theme.min.css">
-    <script type='text/javascript' src="/javascripts/jquery.min.js"></script>
-    <script src="/javascripts/bootstrap.min.js"></script>
-    <script type='text/javascript' src="/javascripts/angular.min.js"></script>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <script type='text/javascript' src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type='text/javascript' src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type='text/javascript' src="bower_components/angular/angular.min.js"></script>
     <link rel="stylesheet" href="/stylesheets/myStyle.css">
     <script type='text/javascript' src="/javascripts/myJs.js"></script>
     <script type="text/javascript" src="/javascripts/chat-store.js"></script>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-
+    <script type="text/javascript" src="bower_components/ng-pageslide/dist/angular-pageslide-directive.min.js"></script>
+    <!--<script type="text/javascript" src="bower_components/socket.io/test/socket.io.js"></script>-->
 </head>
 
 <body ng-app='Message'>
@@ -20,7 +21,6 @@
 <div class="container">
     <!--Кнопки входа-->
     <div ng-controller="loginCtrl" class="row">
-        {{getUserLocalStorage()}}
         <div ng-if="!isAuthorize()">
             <button type="button" class="btn btn-primary pull-right" data-toggle="modal"
                     data-target="#registerModul">Регистрация
@@ -57,14 +57,24 @@
             </div>
         </div>
     </div>
+
     <!--Отображение и добавление сообщения-->
     <div ng-controller="getmessageAllUser as message">
         <div>
             <div class="row">
                 <div class="col-md-2">
-                    <ul>
-                        <li>NickUser</li>
-                    </ul>
+                    <div ng-controller="pageslideCtrl">
+                        <a class="tiny button" ng-click="toggle()">пользователей:{{numberOfOnlineUsers()}}</a>
+                        <div pageslide ps-open="checked" ps-side="left" ps-key-listener="true" ps-size="250">
+                            <div style="padding:20px" id="demo-right">
+                                <h2 >Online Users</h2>
+                                <div ng-repeat="repitUsers in message.onlineUser track by $index">
+                                    <p> <img src="images/logo.jpg" class="img-rounded user-photo-chat ">{{repitUsers}}</p>
+                                </div>
+                                <a ng-click="toggle()" class="button" >Close</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-8 messageViewArea">
                     <div ng-repeat="repitmessage in message.chat track by $index">
