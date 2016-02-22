@@ -5,7 +5,6 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var file=require(__dirname+'/model/handlerFile');
-var onlineUsers=[];
 
 var app = express();
 
@@ -15,6 +14,7 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 /*app.use(bodyParser.json());*/
 app.use(cookieParser());
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
@@ -25,29 +25,35 @@ app.get('/', function(req, res) {
 
 app.post('/login',urlencodedParser,function(req,res){
     try {
-        res.send(file.login(req.body));
+        var name=file.login(req.body);
+        res.send(name);
+        app.get('io').emit('sendOnlineUser',name.name);//return name User who add in chat for other user
     }catch (err){
-       if(err.value==204)
-           res.status(204).send();
-       if(err.value==301)
-           res.status(301).send();
-       if(err.value==400)
-           res.status(400).send();
+        switch (err.value){
+            case 204: res.status(204).send(); break;
+            case 301: res.status(301).send(); break;
+            case 400: res.status(400).send(); break;
+            default: res.status(500).send('UnExpected Error'); break;
+        }
     }
 });
 app.post('/register',urlencodedParser,function(req,res){
     try {
         res.send(file.addNewUser(req.body));
+        app.get('io').emit('sendOnlineUser',req.body.name);
     }catch (err){
-        if(err.value==203)
-            res.status(203).send();
-        if(err.value==400)
-            res.status(400).send();
+        switch (err.value) {
+            case 203:res.status(203).send();break;
+            case 400:res.status(400).send();break;
+            default: res.status(500).send('UnExpected Error'); break;
+        }
     }
+
 });
 app.post('/logout',urlencodedParser,function(req,res){
     file.deleteOnlineUser(req.body.name);
     res.send('ok');
+    app.get('io').emit('deleteOnlineUser',req.body.name)
 });
 
 
