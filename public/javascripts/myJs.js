@@ -2,12 +2,14 @@
 
     var app = angular.module('Message', ["pageslide-directive"]);
     app.controller('getmessageAllUser', function ($scope) {
+        var block = window.document.getElementsByClassName("messageViewArea")[0]||{};
+
         $scope.getNameUser = $chat.getNameUser;
         $scope.isAuthorize = $chat.isAuthorize;
         var socket;
         var messageFull;
         if (!socket) {
-            socket = io.connect('http://192.168.15.25:8000');
+            socket = io.connect(window.location.origin);
             socket.on('chat message', function (data) {
                 var date=new Date(data.date);
                 $chat.sentMessage(data.user, data.message,date);
@@ -47,6 +49,7 @@
                     $chat.sentMessage(messageFull.user, messageFull.message, messageFull.date);
                 }
             }
+            block.scrollTop = block.scrollHeight;
         };
         $scope.deleteMessage= function (messageObj) {
             socket.emit('deleteMessage',messageObj);
