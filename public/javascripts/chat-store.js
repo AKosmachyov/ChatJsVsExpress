@@ -61,7 +61,6 @@
                             login: login,
                             password: password
                         };
-                        console.log(onlineUser);
                         update('logInModul');
                     }
                     if (xhr.status == 301) {
@@ -84,7 +83,12 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        _currentUser = {name: xhr.responseText};
+                        var answer = JSON.parse(xhr.responseText);
+                        _currentUser = {name: answer.name};
+                        onlineUser.splice(0, onlineUser.length);
+                        answer.onlineUser.forEach(function (item) {
+                            onlineUser.push(item);
+                        });
                         update('registerModul');
                     }
                     if (xhr.status == 203) {
@@ -138,13 +142,10 @@
         if (onlineUser.indexOf(name) == -1) {
             onlineUser.push(name);
         }
-        console.log("Список пользователей: ", onlineUser);
-
     };
 
     this.deleteOnlineUser = function (name) {
         onlineUser.splice(onlineUser.indexOf(name), 1);
-        console.log(onlineUser);//Удалили пользователя
     };
     this.numberOfOnlineUsers=function(){
         return onlineUser.length;

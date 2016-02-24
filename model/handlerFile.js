@@ -46,7 +46,13 @@ var userStorage = {
         if (isValidUserRegistr(user)) {
             if (!getUserIfExist(user.login)) {
                 newUsers[user.login] = new User(user);
-                return user.name;
+                if (onlineUsers.indexOf(user.name) < 0) {
+                    onlineUsers.push(user.name)
+                }
+                return {
+                    name:user.name,
+                    onlineUser:onlineUsers
+                }
             }
             throw new ErrorHandler("User is already exist", 203);
         }

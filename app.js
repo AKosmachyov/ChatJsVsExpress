@@ -22,7 +22,6 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.get('/', function(req, res) {
        res.sendFile(path.join(__dirname + '/views/index.html'));
 });
-
 app.post('/login',urlencodedParser,function(req,res){
     try {
         var name=file.login(req.body);
