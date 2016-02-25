@@ -1,1 +1,1 @@
-{"name@email.com":{"name":"Ale","password":"12345"},"login@mail.com":{"name":"MyName","password":"123"},"123@gmail.com":{"name":"123","password":"123"},
+{"name@email.com":{"name":"ALEX","password":"123","id":1,"link":"images/images.png"},"login@mail.com":{"name":"LEV","password":"123","id":2,"link":"images/logo.jpg"},"123@gmail.com":{"name":"123","password":"123","id":3,"link":"images/logo.jpg"},

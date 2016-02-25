@@ -2,7 +2,7 @@
     var _store = [];
     var _dataUser;
     var _currentUser;
-    var onlineUser = [];
+    var onlineUsers={};
 
     function _message(to, message, date) {
         return {
@@ -20,12 +20,7 @@
             if (xhr.readyState == 4) {
                 if (xhr.status == 200) {
                     var answer = JSON.parse(xhr.responseText);
-                    onlineUser.splice(0, onlineUser.length);
-                    if (answer.length > 0){
-                        answer.forEach(function (item) {
-                            onlineUser.push(item);
-                        })
-                    }
+                    onlineUsers=answer;
                 }
             }
         };
@@ -58,7 +53,7 @@
         return _store;
     };
     this.getAllUsersOnline = function () {
-        return onlineUser;
+        return onlineUsers;
     };
     this.login = function (login, password, update) {
         if (login && password) {
@@ -69,7 +64,8 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        _currentUser = {name: xhr.responseText};
+                        temp=JSON.parse(xhr.responseText);
+                        _currentUser = {name:temp.name,id:temp.id};
                         _dataUser = {
                             login: login,
                             password: password
@@ -96,7 +92,8 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        _currentUser = {name: xhr.responseText};
+                        var answer=JSON.parse(xhr.responseText);
+                        _currentUser = {name: answer.name,id:answer.id};
                         update('registerModul');
                     }
                     if (xhr.status == 203) {
@@ -126,7 +123,7 @@
     };
     this.logOut = function (up) {
         var xhr = new XMLHttpRequest();
-        var body = 'name=' + encodeURIComponent(_currentUser.name);
+        var body = 'id=' + encodeURIComponent(_currentUser.id);
         xhr.open("POST", '/logout', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = function () {
@@ -146,26 +143,27 @@
     this.getNameUser = function () {
         return _currentUser && _currentUser.name;
     };
-    this.addOnlineUser = function (name) {
-        if (onlineUser.indexOf(name) == -1) {
-            onlineUser.push(name);
-        }
+    this.addOnlineUser = function (user) {
+        onlineUsers[user.key]={
+            name:user.user.name,
+            link:user.user.link
+        };
     };
 
-    this.deleteOnlineUser = function (name) {
-        onlineUser.splice(onlineUser.indexOf(name), 1);
+
+    this.deleteOnlineUser = function (id) {
+        delete onlineUsers[id];
     };
     this.numberOfOnlineUsers=function(){
-        return onlineUser.length;
+        return Object.keys(onlineUsers).length;
     };
 
     restoreDataUser();
     serverOnlineUsers();
     window.$chat = this;
     window.onbeforeunload = function () {
-
         var xhr = new XMLHttpRequest();
-        var body = 'name=' + encodeURIComponent(_currentUser.name);
+        var body = 'id=' + encodeURIComponent(_currentUser.id);
         xhr.open("POST", '/logout', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
         xhr.onreadystatechange = function () {

@@ -18,12 +18,12 @@
             socket.on('deleteMessage',function(messageObj){
                 $chat.deleteMessage(messageObj,up);
             });
-            socket.on('sendOnlineUser',function(name){
-                $chat.addOnlineUser(name);
+            socket.on('sendOnlineUser',function(user){
+                $chat.addOnlineUser(user);
                 $scope.$apply();
             });
-            socket.on('deleteOnlineUser',function(name){
-               $chat.deleteOnlineUser(name);
+            socket.on('deleteOnlineUser',function(id){
+               $chat.deleteOnlineUser(id);
                 $scope.$apply();
             });
         }
@@ -92,7 +92,7 @@
 
         $scope.toggle = function(){
             $scope.checked = !$scope.checked
-        }
+        };
         $scope.numberOfOnlineUsers=$chat.numberOfOnlineUsers;
 
     }]);

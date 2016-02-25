@@ -24,13 +24,13 @@ app.get('/', function(req, res) {
        res.sendFile(path.join(__dirname + '/views/index.html'));
 });
 app.post('/onlineUsers',function(req,res){
-    res.send(file.getonlineuser());
+    res.send(file.getOnlineUser());
 });
 app.post('/login',urlencodedParser,function(req,res){
     try {
-        var name=file.login(req.body);
-        res.send(name);
-        app.get('io').emit('sendOnlineUser',name);//return name User who add in chat for other user
+        var temp=file.login(req.body);
+        res.send({name:temp.user.name,id:temp.key});
+        app.get('io').emit('sendOnlineUser',temp);//return name User who add in chat for other user
     }catch (err){
         switch (err.value){
             case 204: res.status(204).send(); break;
@@ -42,8 +42,9 @@ app.post('/login',urlencodedParser,function(req,res){
 });
 app.post('/register',urlencodedParser,function(req,res){
     try {
-        res.send(file.addNewUser(req.body));
-        app.get('io').emit('sendOnlineUser',req.body.name);
+        var temp=file.addNewUser(req.body);
+        res.send({name:temp.user.name,id:temp.key});
+        app.get('io').emit('sendOnlineUser',temp)
     }catch (err){
         switch (err.value) {
             case 203:res.status(203).send();break;
@@ -54,9 +55,9 @@ app.post('/register',urlencodedParser,function(req,res){
 
 });
 app.post('/logout',urlencodedParser,function(req,res){
-    file.deleteOnlineUser(req.body.name);
+    file.deleteOnlineUser(req.body.id);
+    app.get('io').emit('deleteOnlineUser',req.body.id)
     res.send('ok');
-    app.get('io').emit('deleteOnlineUser',req.body.name)
 });
 
 

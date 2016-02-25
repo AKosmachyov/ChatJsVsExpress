@@ -71,7 +71,7 @@
                             <div style="padding:10px 20px" id="demo-right">
                                 <h2 >Online Users</h2>
                                 <div ng-repeat="repitUsers in message.onlineUser track by $index">
-                                    <p> <img src="images/logo.jpg" class="img-rounded user-photo-chat ">{{repitUsers}}</p>
+                                    <p> <img ng-src="{{repitUsers.link}}" class="img-rounded user-photo-chat ">{{repitUsers.name}}</p>
                                 </div>
                             </div>
                         </div>
@@ -83,7 +83,7 @@
                                 <div class="textInArea dropdown cursor"
                                      ng-class="{'col-md-offset-6 col-md-6 ':(repitmessage.from==getNameUser())}">
                                     <div class="dropdown-toggle" id="dropdownMenuMessage" data-toggle="dropdown">
-                                        <img src="images/logo.jpg" class="img-rounded user-photo-chat ">{{repitmessage.from}}
+                                        <img ng-src="images/logo.jpg" class="img-rounded user-photo-chat ">{{repitmessage.from}}
                                         <div class=" change-color-message">
                                             {{repitmessage.message}}
                                             <br>
