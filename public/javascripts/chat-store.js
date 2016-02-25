@@ -12,7 +12,25 @@
             date: date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds()
         }
     }
-
+    function serverOnlineUsers(){
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", '/onlineUsers', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    var answer = JSON.parse(xhr.responseText);
+                    onlineUser.splice(0, onlineUser.length);
+                    if (answer.length > 0){
+                        answer.forEach(function (item) {
+                            onlineUser.push(item);
+                        })
+                    }
+                }
+            }
+        };
+        xhr.send();
+    }
     this.getDataUser = function () {
         return _dataUser;
     };
@@ -152,6 +170,7 @@
     };
 
     restoreDataUser();
+    serverOnlineUsers();
     window.$chat = this;
     window.onbeforeunload = function () {
 

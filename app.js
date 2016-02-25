@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var file=require(__dirname+'/model/handlerFile');
 
+
 var app = express();
 
 app.set('view engine', 'ejs');
@@ -22,11 +23,14 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.get('/', function(req, res) {
        res.sendFile(path.join(__dirname + '/views/index.html'));
 });
+app.post('/onlineUsers',function(req,res){
+    res.send(file.getonlineuser());
+});
 app.post('/login',urlencodedParser,function(req,res){
     try {
         var name=file.login(req.body);
         res.send(name);
-        app.get('io').emit('sendOnlineUser',name.name);//return name User who add in chat for other user
+        app.get('io').emit('sendOnlineUser',name);//return name User who add in chat for other user
     }catch (err){
         switch (err.value){
             case 204: res.status(204).send(); break;
