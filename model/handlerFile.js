@@ -2,6 +2,7 @@ var fs = require('fs');
 
 var newUsers = {};
 var users = {};
+var onlineUsers = [];
 
 //Класс содания объекта пользователя
 function User(user) {
@@ -23,8 +24,8 @@ function isValidEmail(email) {
     return (/\S+@\S+\.\S+/).test(email);
 }
 //Есть-ли совпадене с логином
-function isUserExist(login) {
-    return (!!users[login]||!!newUsers[login]);
+function getUserIfExist(login) {
+    return (users[login] || newUsers[login] || false);
 }
 //Восстановление пользователей из файла
 function restoreUsers() {
@@ -43,31 +44,34 @@ function restoreUsers() {
 var userStorage = {
     addNewUser: function (user) {
         if (isValidUserRegistr(user)) {
-            if (!isUserExist(user.login)) {
+            if (!getUserIfExist(user.login)) {
                 newUsers[user.login] = new User(user);
-                return user.name;
+                if (onlineUsers.indexOf(user.name) < 0) {
+                    onlineUsers.push(user.name)
+                }
+                return user.name
             }
-            throw new ErrorHandler("User is already exist",203);
+            throw new ErrorHandler("User is already exist", 203);
         }
-        throw new ErrorHandler("User entity is incorrect",400);
+        throw new ErrorHandler("User entity is incorrect", 400);
     },
     login: function (user) {
         if (isValidUserLogin(user)) {
-            if(isUserExist(user.login)){
-                if(user.password===users[user.login].password){
-                    return users[user.login].name;
-                }else{
-                    if(user.password===newUsers[user.login].password) {
-                        return newUsers[user.login].name;
-                    }else{
-                        throw new ErrorHandler("Wrong data",301)
+            var foundUser = getUserIfExist(user.login);
+            if (foundUser) {
+                if (foundUser.password == user.password) {
+                    if (onlineUsers.indexOf(foundUser.name) < 0) {
+                        onlineUsers.push(foundUser.name)
                     }
+                    return foundUser.name
+                } else {
+                    throw new ErrorHandler("Wrong data", 301);
                 }
-            }else{
-                throw new ErrorHandler("User isn't already exist",204);
+            } else {
+                throw new ErrorHandler("User isn't already exist", 204);
             }
         }
-        throw new ErrorHandler("User entity is incorrect",400);
+        throw new ErrorHandler("User entity is incorrect", 400);
     },
     saveNewUsers: function () {
         if (!!Object.keys(newUsers).length) {
@@ -76,16 +80,23 @@ var userStorage = {
             listNewUser = listNewUser.slice(1, listNewUser.length - 1) + ',';
             fs.appendFileSync('store/storage.txt', listNewUser)
         }
+    },
+    deleteOnlineUser: function (name) {
+        onlineUsers.splice(onlineUsers.indexOf(name, 1));
+    },
+    getonlineuser:function(){
+        return onlineUsers;
     }
 };
-function ErrorHandler(message,code) {
+function ErrorHandler(message, code) {
     this.value = code;
     this.message = (message );
 }
+
 ErrorHandler.prototype = Error.prototype;
 
 restoreUsers().then(function (data) {
-    users=data;
+    users = data;
 });
 
 module.exports = userStorage;
