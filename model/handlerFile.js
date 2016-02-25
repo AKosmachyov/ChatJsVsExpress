@@ -49,10 +49,7 @@ var userStorage = {
                 if (onlineUsers.indexOf(user.name) < 0) {
                     onlineUsers.push(user.name)
                 }
-                return {
-                    name:user.name,
-                    onlineUser:onlineUsers
-                }
+                return user.name
             }
             throw new ErrorHandler("User is already exist", 203);
         }
@@ -66,10 +63,7 @@ var userStorage = {
                     if (onlineUsers.indexOf(foundUser.name) < 0) {
                         onlineUsers.push(foundUser.name)
                     }
-                    return {
-                        name: foundUser.name,
-                        onlineUser: onlineUsers
-                    };
+                    return foundUser.name
                 } else {
                     throw new ErrorHandler("Wrong data", 301);
                 }
@@ -89,6 +83,9 @@ var userStorage = {
     },
     deleteOnlineUser: function (name) {
         onlineUsers.splice(onlineUsers.indexOf(name, 1));
+    },
+    getonlineuser:function(){
+        return onlineUsers;
     }
 };
 function ErrorHandler(message, code) {

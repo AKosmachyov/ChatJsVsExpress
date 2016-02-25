@@ -69,12 +69,7 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        var answer = JSON.parse(xhr.responseText);
-                        _currentUser = {name: answer.name};
-                        onlineUser.splice(0, onlineUser.length);
-                        answer.onlineUser.forEach(function (item) {
-                            onlineUser.push(item);
-                        });
+                        _currentUser = {name: xhr.responseText};
                         _dataUser = {
                             login: login,
                             password: password
@@ -101,12 +96,7 @@
             xhr.onreadystatechange = function () {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
-                        var answer = JSON.parse(xhr.responseText);
-                        _currentUser = {name: answer.name};
-                        onlineUser.splice(0, onlineUser.length);
-                        answer.onlineUser.forEach(function (item) {
-                            onlineUser.push(item);
-                        });
+                        _currentUser = {name: xhr.responseText};
                         update('registerModul');
                     }
                     if (xhr.status == 203) {
