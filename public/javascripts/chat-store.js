@@ -42,11 +42,6 @@
         localStorage.setItem('dataUser', null);
     };
     this.sentMessage = function (name, message, date) {
-        var user = {
-            user: name,
-            message: message,
-            date: date
-        };
         _store.push(_message(name, message, date));
     };
     this.getAllMessage = function () {
@@ -142,6 +137,9 @@
 
     this.getNameUser = function () {
         return _currentUser && _currentUser.name;
+    };
+    this.getIdUser=function(){
+        return _currentUser.id;
     };
     this.addOnlineUser = function (user) {
         onlineUsers[user.key]={

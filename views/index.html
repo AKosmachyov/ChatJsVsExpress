@@ -70,7 +70,7 @@
                             <button type="button" class="close" style="padding:10px " ng-click="toggle()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <div style="padding:10px 20px" id="demo-right">
                                 <h2 >Online Users</h2>
-                                <div ng-repeat="repitUsers in message.onlineUser track by $index">
+                                <div ng-repeat="repitUsers in message.onlineUser() track by $index">
                                     <p> <img ng-src="{{repitUsers.link}}" class="img-rounded user-photo-chat ">{{repitUsers.name}}</p>
                                 </div>
                             </div>
@@ -81,9 +81,10 @@
                     <div ng-repeat="repitmessage in message.chat track by $index">
                         <div class="row">
                                 <div class="textInArea dropdown cursor"
-                                     ng-class="{'col-md-offset-6 col-md-6 ':(repitmessage.from==getNameUser())}">
+                                     ng-class="{'col-md-offset-6 col-md-6':(message.getIdUser()==repitmessage.from)}" ng-init="a=message.onlineUser()">
                                     <div class="dropdown-toggle" id="dropdownMenuMessage" data-toggle="dropdown">
-                                        <img ng-src="images/logo.jpg" class="img-rounded user-photo-chat ">{{repitmessage.from}}
+                                        <img ng-src="{{a[repitmessage.from].link}}" class="img-rounded user-photo-chat">
+                                        {{a[repitmessage.from].name}}
                                         <div class=" change-color-message">
                                             {{repitmessage.message}}
                                             <br>
@@ -92,8 +93,8 @@
                                     </div>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuMessage"
                                         onmousedown="return false">
-                                        <li ng-class="{'disabled':(repitmessage.from != getNameUser())}">
-                                            <a ng-click="deleteMessage(repitmessage)" ng-class="{'disabled':(repitmessage.from != getNameUser())}">
+                                        <li ng-class="{'disabled':(repitmessage.from != message.getIdUser())}">
+                                            <a ng-click="deleteMessage(repitmessage)" ng-class="{'disabled':(repitmessage.from != message.getIdUser())}">
                                                 Удалить
                                             </a>
                                         </li>

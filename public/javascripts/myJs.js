@@ -34,14 +34,16 @@
                 $event.target.value='';        
              }
         };
-        this.onlineUser=$chat.getAllUsersOnline();
+        this.onlineUser=$chat.getAllUsersOnline;
+
         this.chat = $chat.getAllMessage();
         $scope.addMessage = function (value) {
             if(value.length>0) {
                 var newValue = value.replace(/\s+/g, '');
                 if ($chat.isAuthorize() && newValue.length >= 1) {
                     messageFull = {
-                        user: $chat.getNameUser(),
+                        //user: $chat.getNameUser(),
+                        user: $chat.getIdUser(),
                         message: value,
                         date: new Date()
                     };
@@ -51,6 +53,7 @@
             }
             block.scrollTop = block.scrollHeight;
         };
+        this.getIdUser=$chat.getIdUser;
         $scope.deleteMessage= function (messageObj) {
             socket.emit('deleteMessage',messageObj);
             $chat.deleteMessage(messageObj);
@@ -96,4 +99,9 @@
         $scope.numberOfOnlineUsers=$chat.numberOfOnlineUsers;
 
     }]);
+    app.controller('profileCtrl',function($scope){
+        $scope.onlineUser=$chat.getAllUsersOnline();
+        $scope.getIdUser=$chat.getIdUser;
+    })
+
 })();

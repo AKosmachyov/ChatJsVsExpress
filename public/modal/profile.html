@@ -1,4 +1,4 @@
-<div class="modal fade" id="profile" tabindex="-1" role="dialog">
+        <div class="modal fade" id="profile" tabindex="-1" role="dialog" ng-controller="profileCtrl">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -7,7 +7,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="modal-body-optionarea">
-                            <b class="divider row">Смена пароля</b>
+                            <b class="divider row">Смена пароля - не готова</b>
                             <hr>
                              <form class="form-horizontal" >
                              <div class="form-group" >
@@ -28,23 +28,21 @@
                                     <input type="password" class="form-control"  placeholder="111111" required>
                                 </div>
                              </div>
-                             </form>      
-                            
-                            
+                             </form>
                             <hr>
                             <b class="divider row">Аватар</b>
                             <hr>
-
-                            <img src="images/logo.jpg" alt="Что-то пошло не так" class="img-circle users-photo">
+                            <img ng-src="{{onlineUser[getIdUser()].link}}" alt="Что-то пошло не так" class="img-circle users-photo">
                             <br>
                             <br>
-                            <input type="file" name="photoUser" accept="image/jpeg,image/png">
+                            <input type="file" name="photoUser" accept="image/jpeg,image/png" >
+                            <button type="button" class=" btn btn-info btn-sm">Отправить</button>
 
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
-                        <button type="button" class="btn btn-primary">Сохранить изменения</button>
+                       <!-- <button type="button" class="btn btn-primary">Сохранить изменения</button>-->
                     </div>
                 </div>
             </div>
