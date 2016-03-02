@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var file=require(__dirname+'/model/handlerFile');
+var multer  = require('multer');
 
 
 var app = express();
@@ -60,6 +61,25 @@ app.post('/logout',urlencodedParser,function(req,res){
     res.send('ok');
 });
 
+var storage =  multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './public/images');
+    },
+    filename: function (req, file, callback) {
+        callback(null, Date.now()+ '-' + file.originalname);
+    }
+});
+
+var upload = multer({ storage : storage}).single('recfile');
+
+app.post('/photo',function(req,res){
+    upload(req,res,function(err) {
+        if(err) {
+            return res.end("Error uploading file.");
+        }
+        res.end("File is uploaded");
+    });
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

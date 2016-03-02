@@ -2,7 +2,7 @@
 
     var app = angular.module('Message', ["pageslide-directive"]);
     app.controller('getmessageAllUser', function ($scope) {
-        var block = window.document.getElementsByClassName("messageViewArea")[0]||{};
+        var block = window.document.getElementsByClassName("messageViewArea")[0] || {};
 
         $scope.getNameUser = $chat.getNameUser;
         $scope.isAuthorize = $chat.isAuthorize;
@@ -11,34 +11,34 @@
         if (!socket) {
             socket = io.connect(window.location.origin);
             socket.on('chat message', function (data) {
-                var date=new Date(data.date);
-                $chat.sentMessage(data.user, data.message,date);
+                var date = new Date(data.date);
+                $chat.sentMessage(data.user, data.message, date);
                 $scope.$apply();
             });
-            socket.on('deleteMessage',function(messageObj){
-                $chat.deleteMessage(messageObj,up);
+            socket.on('deleteMessage', function (messageObj) {
+                $chat.deleteMessage(messageObj, up);
             });
-            socket.on('sendOnlineUser',function(user){
+            socket.on('sendOnlineUser', function (user) {
                 $chat.addOnlineUser(user);
                 $scope.$apply();
             });
-            socket.on('deleteOnlineUser',function(id){
-               $chat.deleteOnlineUser(id);
+            socket.on('deleteOnlineUser', function (id) {
+                $chat.deleteOnlineUser(id);
                 $scope.$apply();
             });
         }
-        $scope.keypress = function($event) {
-             if($event.keyCode==13 && !$event.shiftKey){
+        $scope.keypress = function ($event) {
+            if ($event.keyCode == 13 && !$event.shiftKey) {
                 $scope.addMessage($event.target.value);
                 $event.preventDefault();
-                $event.target.value='';        
-             }
+                $event.target.value = '';
+            }
         };
-        this.onlineUser=$chat.getAllUsersOnline;
+        this.onlineUser = $chat.getAllUsersOnline;
 
         this.chat = $chat.getAllMessage();
         $scope.addMessage = function (value) {
-            if(value.length>0) {
+            if (value.length > 0) {
                 var newValue = value.replace(/\s+/g, '');
                 if ($chat.isAuthorize() && newValue.length >= 1) {
                     messageFull = {
@@ -53,9 +53,9 @@
             }
             block.scrollTop = block.scrollHeight;
         };
-        this.getIdUser=$chat.getIdUser;
-        $scope.deleteMessage= function (messageObj) {
-            socket.emit('deleteMessage',messageObj);
+        this.getIdUser = $chat.getIdUser;
+        $scope.deleteMessage = function (messageObj) {
+            socket.emit('deleteMessage', messageObj);
             $chat.deleteMessage(messageObj);
         };
         function up() {
@@ -63,7 +63,7 @@
         }
     });
 
-    app.controller('loginCtrl', function ($scope){
+    app.controller('loginCtrl', function ($scope) {
         $scope.login = function (l, p) {
             $chat.login(l, p, up);
         };
@@ -71,37 +71,68 @@
             $chat.register(n, l, p, up);
         };
         function up(nameModule) {
-            $('#'+nameModule).modal('hide');
+            $('#' + nameModule).modal('hide');
             $scope.$apply();
         }
+
         $scope.isAuthorize = $chat.isAuthorize;
         $scope.getNameUser = $chat.getNameUser;
 
-        $scope.logOut =function() {
+        $scope.logOut = function () {
             $chat.logOut(up);
         };
         $scope.clearMessageHistory = $chat.clearMessageHistory;
-        (function getUserLocalStorage(){
+        (function getUserLocalStorage() {
             var savedUser = $chat.getDataUser();
             if (savedUser) {
-                $chat.login(savedUser.login, savedUser.password,up);
+                $chat.login(savedUser.login, savedUser.password, up);
             }
         })();
 
     });
-    app.controller('pageslideCtrl',['$scope',function($scope){
+    app.directive('ngSimpleUpload', [function () {
+        return {
+            scope: {
+                webApiUrl: '@'
+            },
+            link: function (scope, element, attrs) {
+                element.on('change', function (evt) {
+                    var files = evt.__files__ || (evt.target && evt.target.files);
+
+                    var fd = new FormData();
+                    fd.append('recfile', files[0]);
+
+                    return $.ajax({
+                        type: 'POST',
+                        url: scope.webApiUrl,
+                        data: fd,
+                        async: true,
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    }).done(function (d) {
+
+                    }).fail(function (x) {
+                        console.log(x);
+                    });
+                });
+            }
+        }
+    }]);
+
+    app.controller('pageslideCtrl', ['$scope', function ($scope) {
 
         $scope.checked = false; // This will be binded using the ps-open attribute
 
-        $scope.toggle = function(){
+        $scope.toggle = function () {
             $scope.checked = !$scope.checked
         };
-        $scope.numberOfOnlineUsers=$chat.numberOfOnlineUsers;
+        $scope.numberOfOnlineUsers = $chat.numberOfOnlineUsers;
 
     }]);
-    app.controller('profileCtrl',function($scope){
-        $scope.onlineUser=$chat.getAllUsersOnline();
-        $scope.getIdUser=$chat.getIdUser;
+    app.controller('profileCtrl', function ($scope) {
+        $scope.onlineUser = $chat.getAllUsersOnline();
+        $scope.getIdUser = $chat.getIdUser;
     })
 
 })();
