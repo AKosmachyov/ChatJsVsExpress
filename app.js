@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var file=require(__dirname+'/model/handlerFile');
 var multer  = require('multer');
+var dataBase=require(__dirname+'/model/DB.js');
 
 
 var app = express();
@@ -43,7 +44,7 @@ app.post('/login',urlencodedParser,function(req,res){
 });
 app.post('/register',urlencodedParser,function(req,res){
     try {
-        var temp=file.addNewUser(req.body);
+        var temp=dataBase.addNewUser(req.body);
         res.send({name:temp.user.name,id:temp.key});
         app.get('io').emit('sendOnlineUser',temp)
     }catch (err){

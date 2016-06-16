@@ -81,7 +81,7 @@
     this.register = function (name, login, password, update) {
         if (name && login && password) {
             var xhr = new XMLHttpRequest();
-            var body = 'name=' + encodeURIComponent(name) + '&login=' + encodeURIComponent(login) + '&password=' + encodeURIComponent(password);
+            var body = 'name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(login) + '&password=' + encodeURIComponent(password);
             xhr.open("POST", '/register', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.onreadystatechange = function () {
@@ -139,7 +139,7 @@
         return _currentUser && _currentUser.name;
     };
     this.getIdUser=function(){
-        return _currentUser.id;
+        return _currentUser && _currentUser.id || 0 ;
     };
     this.addOnlineUser = function (user) {
         onlineUsers[user.key]={

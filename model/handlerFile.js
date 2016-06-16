@@ -1,4 +1,7 @@
 var fs = require('fs');
+var Users=require('../lib/user.js');
+var moongoose=require('../lib/mongoose.js');
+
 
 var newUsers = {};
 var users = {};
@@ -52,10 +55,10 @@ var userStorage = {
         if (isValidUserRegistr(user)) {
             if (!getUserIfExist(user.login)) {
                 newUsers[user.login] = new User(user);
-                if(!onlineUsers[newUsers[user.login].id]){
-                    onlineUsers[newUsers[user.login].id]={
-                        name:newUsers[user.login].name,
-                        link:newUsers[user.login].link
+                if(!onlineUsers[newUsers[user.login].id]) {
+                    onlineUsers[newUsers[user.login].id] = {
+                        name: newUsers[user.login].name,
+                        link: newUsers[user.login].link
                     }
                 }
                 return {
@@ -72,10 +75,10 @@ var userStorage = {
             var foundUser = getUserIfExist(user.login);
             if (foundUser) {
                 if (foundUser.password == user.password){
-                    if(!onlineUsers[foundUser.id]){
-                        onlineUsers[foundUser.id]={
-                            name:foundUser.name,
-                            link:foundUser.link
+                    if(!onlineUsers[foundUser.id]) {
+                        onlineUsers[foundUser.id] = {
+                            name: foundUser.name,
+                            link: foundUser.link
                         }
                     }
                     return {
