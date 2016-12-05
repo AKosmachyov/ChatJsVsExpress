@@ -44,9 +44,10 @@ app.post('/login',urlencodedParser,function(req,res){
 });
 app.post('/register',urlencodedParser,function(req,res){
     try {
-        var temp=dataBase.addNewUser(req.body);
-        res.send({name:temp.user.name,id:temp.key});
-        app.get('io').emit('sendOnlineUser',temp)
+        dataBase.addNewUser(req.body).then(function (temp) {
+            res.send({name:temp.user.name,id:temp.key});
+            app.get('io').emit('sendOnlineUser',temp)
+        })
     }catch (err){
         switch (err.value) {
             case 203:res.status(203).send();break;

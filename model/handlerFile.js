@@ -1,6 +1,5 @@
 var fs = require('fs');
-var Users=require('../lib/user.js');
-var moongoose=require('../lib/mongoose.js');
+
 
 
 var newUsers = {};
