@@ -19,19 +19,19 @@ function isValidUserRegister(user) {
 function isValidEmail(email) {
     return (/\S+@\S+\.\S+/).test(email);
 }
-function isExist(email) {
+function countUsersByEmail(email) {
     //return collection.findOne({email: email},{fields:{_id:1}});
-    return collection.find({email: email}).limit(1).explain();
+    return collection.find({email: email}).limit(1).count();
 }
 
 var userStorage = {
     addNewUser: function (user) {
         if (!isValidUserRegister(user))
-            throw new Error("User entity is incorrect");
-       return isExist(user.email)
-            .then(function (err, val) {
-                if (typeof val != "undefined") {
-                    throw new Error("User is alredy");
+            return Promise.reject("User entity is incorrect");
+        return countUsersByEmail(user.email)
+            .then(function (count) {
+                if (count > 0) {
+                    throw new Error("This email is already registered");
                 }
                 var newUser = {
                     userName: user.name,
@@ -40,13 +40,6 @@ var userStorage = {
                     avatarLink: "images/logo.jpg"
                 };
                 return collection.insertOne(newUser)
-            }).then(function (val) {
-                return {
-                    key: 5,
-                    user: {
-                        name: val.ops[0].userName
-                    }
-                }
             });
     },
     checkPassword: function (user) {
