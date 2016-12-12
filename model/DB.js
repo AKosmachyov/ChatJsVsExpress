@@ -30,7 +30,7 @@ function isValidEmail(email) {
 var userStorage = {
     addNewUser: function (user) {
         if (!isValidUserRegister(user))
-            return Promise.reject("User entity is incorrect");
+            return Promise.reject(new Error("User entity is incorrect"));
         return collection.find({$or:[{userName: user.userName}, {email: user.email}]}).count()
             .then(function (count) {
                 if (count > 0) {
@@ -41,7 +41,7 @@ var userStorage = {
     },
     login: function (user) {
         if(!isValidUserLogin(user))
-            return Promise.reject("User entity is incorrect");
+            return Promise.reject(new Error("User entity is incorrect"));
         return collection.find(user).next()
             .then(function (val) {
                 if(val === null)
@@ -52,8 +52,15 @@ var userStorage = {
                 }
             })
     },
-    changePassword: function(user){
-
+    changePassword: function(user) {
+        if (!(!!user && !!user.userName && !!user.password && !!user.newPassword))
+            return Promise.reject(new Error("User entity is incorrect"));
+        return collection.findOneAndUpdate({userName: user.userName, password: user.password}, {$set: {password: user.newPassword}})
+            .then(function(val){
+                if(val.lastErrorObject.n != 1)
+                    return Promise.reject(new Error("User password is incorrect"));
+                return;
+        });
     }
 };
 

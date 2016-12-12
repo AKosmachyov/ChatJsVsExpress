@@ -15,7 +15,7 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-/*app.use(bodyParser.json());*/
+//app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -30,37 +30,36 @@ app.post('/onlineUsers',function(req,res){
 });
 app.post('/login',urlencodedParser,function(req,res){
     try {
-        var temp=file.login(req.body);
-        res.send({name:temp.user.name,id:temp.key});
-        app.get('io').emit('sendOnlineUser',temp);//return name User who add in chat for other user
+        dataBase.login(req.body)
+            .then(function (val) {
+                res.send(val);
+            }).catch(function (err) {
+            res.status(400).send(err.message)
+        });
+        //app.get('io').emit('sendOnlineUser',temp);//return name User who add in chat for other user
     }catch (err){
-        switch (err.value){
-            case 204: res.status(204).send(); break;
-            case 301: res.status(301).send(); break;
-            case 400: res.status(400).send(); break;
-            default: res.status(500).send('UnExpected Error'); break;
-        }
     }
 });
 app.post('/register',urlencodedParser,function(req,res){
-    try {
-        dataBase.addNewUser(req.body).then(function (temp) {
-            res.send({name:temp.user.name,id:temp.key});
-            app.get('io').emit('sendOnlineUser',temp)
-        })
-    }catch (err){
-        switch (err.value) {
-            case 203:res.status(203).send();break;
-            case 400:res.status(400).send();break;
-            default: res.status(500).send('UnExpected Error'); break;
-        }
-    }
-
+    dataBase.addNewUser(req.body).then(function (temp) {
+        res.send("Successful");
+        //app.get('io').emit('sendOnlineUser',temp)
+    }).catch(function (err) {
+        res.status(400).send(err.message);        
+    });
 });
 app.post('/logout',urlencodedParser,function(req,res){
     file.deleteOnlineUser(req.body.id);
     app.get('io').emit('deleteOnlineUser',req.body.id)
     res.send('ok');
+});
+app.post('/changePassword',urlencodedParser,function(req,res) {
+    dataBase.changePassword(req.body)
+        .then(function (val) {
+            res.send('Successful');
+        }).catch(function (err) {
+            res.status(400).send(err.message);
+    })
 });
 
 var storage =  multer.diskStorage({
