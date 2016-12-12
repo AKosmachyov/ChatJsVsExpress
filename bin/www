@@ -7,7 +7,6 @@
 var app = require('../app');
 var debug = require('debug')('ExpressChatJs:server');
 var http = require('http');
-
 var file=require('../model/handlerFile');
 
 var sockets = [];

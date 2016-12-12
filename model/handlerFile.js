@@ -1,14 +1,18 @@
 var fs = require('fs');
 
+
+
 var newUsers = {};
 var users = {};
-var onlineUsers = [];
-
+var onlineUsers={};
+var idCount=0;
 //Класс содания объекта пользователя
 function User(user) {
     return {
         name: user.name,
-        password: user.password
+        password: user.password,
+        id:getId(),
+        link:"images/logo.jpg"
     }
 }
 
@@ -40,16 +44,26 @@ function restoreUsers() {
         })
     })
 }
+function getId(){
+    idCount+=1;
+    return idCount;
+}
 //экспортируемый объект
 var userStorage = {
     addNewUser: function (user) {
         if (isValidUserRegistr(user)) {
             if (!getUserIfExist(user.login)) {
                 newUsers[user.login] = new User(user);
-                if (onlineUsers.indexOf(user.name) < 0) {
-                    onlineUsers.push(user.name)
+                if(!onlineUsers[newUsers[user.login].id]) {
+                    onlineUsers[newUsers[user.login].id] = {
+                        name: newUsers[user.login].name,
+                        link: newUsers[user.login].link
+                    }
                 }
-                return user.name
+                return {
+                    key:newUsers[user.login].id,
+                    user:onlineUsers[newUsers[user.login].id]
+                }
             }
             throw new ErrorHandler("User is already exist", 203);
         }
@@ -59,11 +73,17 @@ var userStorage = {
         if (isValidUserLogin(user)) {
             var foundUser = getUserIfExist(user.login);
             if (foundUser) {
-                if (foundUser.password == user.password) {
-                    if (onlineUsers.indexOf(foundUser.name) < 0) {
-                        onlineUsers.push(foundUser.name)
+                if (foundUser.password == user.password){
+                    if(!onlineUsers[foundUser.id]) {
+                        onlineUsers[foundUser.id] = {
+                            name: foundUser.name,
+                            link: foundUser.link
+                        }
                     }
-                    return foundUser.name
+                    return {
+                        key:foundUser.id,
+                        user:onlineUsers[foundUser.id]
+                    }
                 } else {
                     throw new ErrorHandler("Wrong data", 301);
                 }
@@ -82,9 +102,9 @@ var userStorage = {
         }
     },
     deleteOnlineUser: function (name) {
-        onlineUsers.splice(onlineUsers.indexOf(name, 1));
+        delete onlineUsers[name];
     },
-    getonlineuser:function(){
+    getOnlineUser:function(){
         return onlineUsers;
     }
 };
@@ -97,6 +117,8 @@ ErrorHandler.prototype = Error.prototype;
 
 restoreUsers().then(function (data) {
     users = data;
+    idCount=users[Object.keys(data)[Object.keys(data).length-1]].id;
 });
+
 
 module.exports = userStorage;
