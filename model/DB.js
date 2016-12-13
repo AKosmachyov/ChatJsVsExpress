@@ -2,12 +2,14 @@ const MongoClient = require('mongodb').MongoClient
     , assert = require('assert');
 
 const url = 'mongodb://localhost:27017/Chat';
-var collection;
+var collUsers, collOnline;
 MongoClient.connect(url, function(err, db) {
     assert.equal(null, err);
-    console.log("Connected")
-    collection = db.collection('Users');
+    console.log("Connected");
+    collUsers = db.collection('Users');
+    collOnline = db.collection('Online');
 });
+
 const UserEntity = function ({userName, email, password}) {
     return{
         userName: userName,
@@ -16,7 +18,16 @@ const UserEntity = function ({userName, email, password}) {
         avatarLink: "images/logo.jpg"
     }
 };
+const UserOnlineEntity = function ({userName, avatarLink}) {
+    return{
+        userName:userName,
+        avatarLink:avatarLink
+    }
+}
 
+function addUserForOnline(user) {
+    return collOnline.insertOne(user);
+}
 function isValidUserRegister(user) {
     return (!!user && isValidEmail(user.email) && !!user.userName && !!user.password);
 }
@@ -31,36 +42,54 @@ var userStorage = {
     addNewUser: function (user) {
         if (!isValidUserRegister(user))
             return Promise.reject(new Error("User entity is incorrect"));
-        return collection.find({$or:[{userName: user.userName}, {email: user.email}]}).count()
+        return collUsers.find({$or:[{userName: user.userName}, {email: user.email}]}).count()
             .then(function (count) {
                 if (count > 0) {
                     throw new Error("This email is already registered");
                 }
-                return collection.insertOne(new UserEntity(user))
+                return collUsers.insertOne(new UserEntity(user))
+                    .then(function(val){
+                        return addUserForOnline(new UserOnlineEntity(val.ops[0]));
+                    });
             });
     },
     login: function (user) {
         if(!isValidUserLogin(user))
             return Promise.reject(new Error("User entity is incorrect"));
-        return collection.find(user).next()
+        return collUsers.find(user).next()
             .then(function (val) {
-                if(val === null)
+                if (val === null)
                     throw new Error("Email or password is incorrect");
+                return addUserForOnline(new UserOnlineEntity(val));
+            }).then(function (val) {
                 return {
-                    userName: val.userName,
-                    avatarLink: val.avatarLink
+                    userName: val.ops[0].userName,
+                    avatarLink: val.ops[0].avatarLink
                 }
             })
     },
     changePassword: function(user) {
         if (!(!!user && !!user.userName && !!user.password && !!user.newPassword))
             return Promise.reject(new Error("User entity is incorrect"));
-        return collection.findOneAndUpdate({userName: user.userName, password: user.password}, {$set: {password: user.newPassword}})
+        return collUsers.findOneAndUpdate({userName: user.userName, password: user.password}, {$set: {password: user.newPassword}})
             .then(function(val){
                 if(val.lastErrorObject.n != 1)
                     return Promise.reject(new Error("User password is incorrect"));
                 return;
         });
+    },
+    getOnlineUser: function () {
+        return collOnline.find({},{_id: 0}).toArray();
+    },
+    deleteOnlineUser: function (user) {
+        if (!(!!user && !!user.userName))
+            return Promise.reject(new Error("User entity is incorrect"));
+        return collOnline.findOneAndDelete({userName: user.userName})
+            .then(function (val) {
+                if(val.lastErrorObject.n != 1)
+                    return Promise.reject(new Error("User isn't online"));
+                return;
+            })
     }
 };
 
