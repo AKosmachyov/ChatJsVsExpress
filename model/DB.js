@@ -90,6 +90,9 @@ var userStorage = {
                     return Promise.reject(new Error("User isn't online"));
                 return;
             })
+    },
+    dropOnlineUsers: function () {
+        return collOnline.drop();
     }
 };
 
