@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('ExpressChatJs:server');
 var http = require('http');
 var file=require('../model/handlerFile');
+const dataBase = require('../model/DB.js')
 
 var sockets = [];
 
@@ -37,17 +38,18 @@ server.on('listening', onListening);
 
 process.on('SIGINT', function() {
   console.log('key determinate detected');
-  file.saveNewUsers();
-  //setTimeout(function () {
-    sockets.forEach(function (socet) {
-      socet.destroy();
-    });
+  dataBase.dropOnlineUsers()
+      .then(function () {
+            sockets.forEach(function (socet) {
+              socet.destroy();
+            });
 
-    server.close(function () {
-      console.log('Stop server event starting');
-      process.exit(0);
-    });
-  //},1000)
+            server.close(function () {
+              console.log('Stop server event starting');
+              process.exit(0);
+            });
+          }
+      );
 });
 
 /**
