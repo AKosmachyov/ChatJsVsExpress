@@ -2,7 +2,7 @@
     var _store = [];
     var _dataUser;
     var _currentUser;
-    var onlineUsers={};
+    var onlineUsers = [];
 
     function _message(to, message, date) {
         return {
@@ -13,19 +13,31 @@
         }
     }
     function serverOnlineUsers(){
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", '/onlineUsers', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4) {
-                if (xhr.status == 200) {
-                    var answer = JSON.parse(xhr.responseText);
-                    onlineUsers=answer;
-                }
-            }
-        };
-        xhr.send();
+        ajax('/room/onlineUsers', 'POST', null)
+            .then(function (val) {
+                onlineUsers = JSON.parse(val)
+            })
+        // var xhr = new XMLHttpRequest();
+        // xhr.open("POST", '/onlineUsers', true);
+        // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // xhr.onreadystatechange = function () {
+        //     if (xhr.readyState == 4) {
+        //         if (xhr.status == 200) {
+        //             var answer = JSON.parse(xhr.responseText);
+        //             onlineUsers=answer;
+        //         }
+        //     }
+        // };
+        // xhr.send();
     }
+    function ajax(url, type, data) {
+        return $.ajax({
+            url:url,
+            method: type,
+            data: data
+        })
+    }
+    
     this.getDataUser = function () {
         return _dataUser;
     };
@@ -33,9 +45,9 @@
         localStorage.setItem('dataUser', JSON.stringify(_dataUser));
     }
 
-    function restoreDataUser() {
-        _dataUser = JSON.parse(localStorage.getItem('dataUser')) || {};
-    }
+    // function restoreDataUser() {
+    //     _dataUser = JSON.parse(localStorage.getItem('dataUser')) || {};
+    // }
 
     this.clearDataUser = function () {
         _dataUser = null;
@@ -50,56 +62,31 @@
     this.getAllUsersOnline = function () {
         return onlineUsers;
     };
-    this.login = function (login, password, update) {
-        if (login && password) {
-            var xhr = new XMLHttpRequest();
-            var body = 'login=' + encodeURIComponent(login) + '&password=' + encodeURIComponent(password);
-            xhr.open("POST", '/login', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        temp=JSON.parse(xhr.responseText);
-                        _currentUser = {name:temp.name,id:temp.id};
-                        _dataUser = {
-                            login: login,
-                            password: password
-                        };
-                        update('logInModul');
-                    }
-                    if (xhr.status == 301) {
-                        alert("Невернеы данные");
-                    }
-                    if (xhr.status === 204) {
-                        alert("Данный email не зарегистрирован");
-                    }
-                }
-            };
-            xhr.send(body);
+    this.login = function (email, password, update) {
+        if (!!email && !!password) {
+            ajax('/profile/login','POST',{email:email,password:password})
+                .then(function (user) {
+                    _currentUser = {
+                        userName: user.userName,
+                        avatarLink: user.avatarLink
+                    };
+                    _dataUser = {
+                        email: login,
+                        password: password
+                    };
+                    update('logInModul');
+                });
         }
     };
-    this.register = function (name, login, password, update) {
-        if (name && login && password) {
-            var xhr = new XMLHttpRequest();
-            var body = 'name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(login) + '&password=' + encodeURIComponent(password);
-            xhr.open("POST", '/register', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == 4) {
-                    if (xhr.status == 200) {
-                        var answer=JSON.parse(xhr.responseText);
-                        _currentUser = {name: answer.name,id:answer.id};
-                        update('registerModul');
-                    }
-                    if (xhr.status == 203) {
-                        alert("Данный email зарегистрирован")
-                    }
-                    if (xhr.status == 400) {
-                        alert("Плохой запрос или логин не соответствует требованиям")
-                    }
-                }
-            };
-            xhr.send(body);
+    this.register = function (userName, email, password, update) {
+        if (!!userName && !!email && !!password) {
+            ajax('/profile/register','POST',{userName:userName,email:email,password:password})
+                .then(function () {
+                    _currentUser = {
+                        userName: userName
+                    };
+                    update('registerModul');
+                })        
         }
     };
     this.clearMessageHistory = function () {
@@ -135,8 +122,8 @@
         return !!_currentUser;
     };
 
-    this.getNameUser = function () {
-        return _currentUser && _currentUser.name;
+    this.getUserName = function () {
+        return _currentUser && _currentUser.userName;
     };
     this.getIdUser=function(){
         return _currentUser && _currentUser.id || 0 ;
@@ -152,11 +139,11 @@
     this.deleteOnlineUser = function (id) {
         delete onlineUsers[id];
     };
-    this.numberOfOnlineUsers=function(){
-        return Object.keys(onlineUsers).length;
+    this.countOnlineUsers=function(){
+        return onlineUsers.length;
     };
 
-    restoreDataUser();
+    //restoreDataUser();
     serverOnlineUsers();
     window.$chat = this;
     window.onbeforeunload = function () {
