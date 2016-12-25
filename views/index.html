@@ -1,131 +1,51 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Чат</title>
+    <script type='text/javascript' src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type='text/javascript' src="bower_components/angular/angular.min.js"></script>
+    <script type='text/javascript' src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
-    <script type='text/javascript' src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script type='text/javascript' src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script type='text/javascript' src="bower_components/angular/angular.min.js"></script>
-    <link rel="stylesheet" href="/stylesheets/myStyle.css">
-    <script type='text/javascript' src="/javascripts/myJs.js"></script>
-    <script type="text/javascript" src="/javascripts/chat-store.js"></script>
-    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script type="text/javascript" src="bower_components/ng-pageslide/dist/angular-pageslide-directive.min.js"></script>
-    <!--<script type="text/javascript" src="bower_components/socket.io/test/socket.io.js"></script>-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/stylesheets/index.css">
 </head>
-
-<body ng-app='Message'>
-
-<div class="container">
-    <!--Кнопки входа-->
-    <div ng-controller="loginCtrl" class="row">
-        <div ng-if="!isAuthorize()">
-            <button type="button" class="btn btn-primary pull-right" data-toggle="modal"
-                    data-target="#registerModul">Регистрация
-            </button>
-            <button type="button" class="btn btn-primary pull-right" data-toggle="modal"
-                    data-target="#logInModul" id="buttonLogIn_">Войти
+<body class="container-fluid" ng-app='Chat'>
+<div class="row" style="height: 100vh">
+    <div class="hidden-xs col-sm-3 navigation-bar">
+        <div class="form-inline search-element" >
+            <input type="text" class="form-control">
+            <button type="button" class="btn btn-default">
+                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
             </button>
         </div>
-
-        <!--Кнопки Пользователя-->
-        <div ng-if="isAuthorize()" class="pull-right">
-            <div class="form-inline dropdown cursor" onselectstart="return false" onmousedown="return false">
-
-                <!-- Кнопка очистки-->
-                <button class="btn btn-default" id="buttonClearChat" ng-click="clearMessageHistory()">Очистка</button>
-                <span for="dropdownMenu">Привет:</span>
-                    <span class="dropdown-toggle" id="dropdownMenu" data-toggle="dropdown">
-                        <b>{{getUserName()}}</b>
-                        <span class="caret"></span>
-                    </span>
-                <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu">
-                    <li>
-                        <a data-toggle="modal" data-target="#profile">
-                            <i class="glyphicon glyphicon-user"></i> Профиль
-                        </a>
-                    </li>
-                    <li role="separator" class="divider"></li>
-                    <li>
-                        <a ng-click="logOut()" id="liLogOut">
-                            <i class="glyphicon glyphicon-off"></i> Выйти
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!--Отображение и добавление сообщения-->
-    <div ng-controller="getmessageAllUser as message">
         <div>
-            <div class="row">
-                <div class="col-md-2">
-                    <div ng-controller="pageslideCtrl">
-                        <a class="tiny button" ng-click="toggle()">пользователей:{{countOnlineUsers()}}</a>
-
-                        <div pageslide ps-open="checked" ps-side="left" ps-key-listener="true" ps-size="250">
-                            <button type="button" class="close" style="padding:10px " ng-click="toggle()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <div style="padding:10px 20px" id="demo-right">
-                                <h2 >Online Users</h2>
-                                <div ng-repeat="repitUsers in message.onlineUser()">
-                                    <p> <img ng-src="{{repitUsers.avatarLink}}" class="img-rounded user-photo-chat ">{{repitUsers.userName}}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8 messageViewArea">
-                    <div ng-repeat="repitmessage in message.chat track by $index">
-                        <div class="row">
-                                <div class="textInArea dropdown cursor"
-                                     ng-class="{'col-md-offset-6 col-md-6':(message.getUserName()==repitmessage.from)}" ng-init="a=message.onlineUser()">
-                                    <div class="dropdown-toggle" id="dropdownMenuMessage" data-toggle="dropdown">
-                                        <img ng-src="{{repitmessage.avatarLink}}" class="img-rounded user-photo-chat">
-                                        {{repitmessage.from}}
-                                        <div class=" change-color-message">
-                                            {{repitmessage.message}}
-                                            <br>
-                                            {{repitmessage.date}}
-                                        </div>
-                                    </div>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuMessage"
-                                        onmousedown="return false">
-                                        <li ng-class="{'disabled':(repitmessage.from != message.getIdUser())}">
-                                            <a ng-click="deleteMessage(repitmessage)" ng-class="{'disabled':(repitmessage.from != message.getIdUser())}">
-                                                Удалить
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-8 text-area input-group">
-                <textarea class="messageArea form-control custom-control" ng-keydown="keypress($event)"
-                          ng-disabled="!isAuthorize()" ng-model="newMessage">
-                </textarea>
-                <button class="btn btn-primary form-control" ng-disabled="!isAuthorize()"
-                        ng-click="addMessage(newMessage);newMessage='';">Отправить
-                </button>
-            </div>
+            private room
         </div>
     </div>
-
-    <!-- Register -->
-    <div ng-include="'/modal/register.html'"></div>
-    <!-- LogIn -->
-    <div ng-include="'/modal/login.html'"></div>
-    <!-- Профиль -->
-    <div ng-include="'/modal/profile.html'"></div>
-
+    <div class="col-xs-12 col-sm-9 message-block">
+        <div class="top-bar">
+            <div class="top-bar-left">
+                to NickName
+            </div>
+            <div class="top-bar-center">
+                logo
+            </div>
+            <div class="top-bar-right">
+                <a class="authorization-link">Регистрация</a>
+                <a class="authorization-link">Вход</a>
+            </div>
+        </div>
+        <div class="message-list ">
+            message
+        </div>
+        <div class="input-box">
+            <textarea></textarea>
+        </div>
+    </div>
 </div>
 </body>
 </html>
