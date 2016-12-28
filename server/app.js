@@ -3,8 +3,6 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var file=require(__dirname+'/model/handlerFile');
-var multer  = require('multer');
 var profile = require('./route/profile.js');
 var room = require('./route/room.js');
 
@@ -23,17 +21,6 @@ app.get('/', function(req, res) {
 
 app.use('/profile', profile);
 app.use('/room', room);
-
-var storage =  multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, './public/images');
-    },
-    filename: function (req, file, callback) {
-        callback(null, Date.now()+ '-' + file.originalname);
-    }
-});
-
-var upload = multer({ storage : storage}).single('recfile');
 
 app.post('/photo',function(req,res){
     upload(req,res,function(err) {
@@ -77,4 +64,3 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
-

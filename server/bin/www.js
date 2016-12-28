@@ -1,13 +1,8 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-
 var app = require('../app');
 var debug = require('debug')('ExpressChatJs:server');
 var http = require('http');
-var file=require('../model/handlerFile');
 const dataBase = require('../model/DB.js')
 
 var sockets = [];
