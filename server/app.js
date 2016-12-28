@@ -12,11 +12,16 @@ app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(cookieParser());
-app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+app.set('views', path.join(__dirname, 'views/'));
+app.use('/node_modules' ,express.static(path.join(__dirname, '../node_modules')));
+app.use('/app', express.static(path.join(__dirname, '../app')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res) {
-       res.sendFile(path.join(__dirname + '/views/index.html'));
+       res.sendFile('index.html', { root: './app' });
+});
+app.get('/systemjs.config.js', function(req, res) {
+    res.sendFile('systemjs.config.js', { root: './' });
 });
 
 app.use('/profile', profile);

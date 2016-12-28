@@ -9,7 +9,6 @@
     height: 40px;
     border-bottom: 1.5px solid #d1cbcb;
 }
-
 .message-block {
     display: flex;
     flex-direction: column;
@@ -53,4 +52,7 @@ textarea {
 }
 .authorization-link {
     margin: auto;
+}
+.container-fluid {
+    padding: 0px;
 }

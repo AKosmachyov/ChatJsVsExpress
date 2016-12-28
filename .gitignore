@@ -2,3 +2,5 @@
 /test
 *.idea
 /bower_components
+/app/*.js
+/app/*.map

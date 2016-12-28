@@ -40,11 +40,16 @@ process.on('SIGINT', function() {
             });
 
             server.close(function () {
-              console.log('Stop server event starting');
+              console.log('Stop server event');
               process.exit(0);
             });
-          }
-      );
+      }, function (err) {
+          if(err.message == 'ns not found')
+            server.close(function () {
+              console.log('Stop server event');
+              process.exit(0);
+            });
+      })
 });
 
 /**
