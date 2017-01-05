@@ -16,7 +16,8 @@
       '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
       
       'rxjs':                      'npm:rxjs',
-      'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
+      'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
+      'ng2bs3modal': 'npm:ng2-bs3-modal'
     },
     
     packages: {
@@ -25,6 +26,9 @@
         defaultExtension: 'js'
       },
       rxjs: {
+        defaultExtension: 'js'
+      },
+      ng2bs3modal: {
         defaultExtension: 'js'
       }
     }
