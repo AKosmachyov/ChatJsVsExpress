@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { TopBar } from './top-bar.component.ts';
+import { TopBar } from './top-bar.component';
 
 @Component({
     selector: 'my-app',

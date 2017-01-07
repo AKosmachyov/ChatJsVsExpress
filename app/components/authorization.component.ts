@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Ng2Bs3ModalModule } from 'ng2bs3modal/ng2-bs3-modal';
-import { HttpService} from '../services/http.service.ts';
-import {UserService} from  '../services/user.service.ts';
+import { HttpService} from '../services/http.service';
+import {UserService} from  '../services/user.service';
 
 @Component({
     selector: 'log-in',
@@ -15,7 +15,7 @@ import {UserService} from  '../services/user.service.ts';
                 <input type="password" [(ngModel)]="logInData.password" placeholder="Пароль">                
             </modal-body>
             <modal-footer>        
-                <button type="button" class="btn btn-primary" (click)="singUp(logInData)">Войти</button>
+                <button type="button" class="btn btn-primary" (click)="logIn(logInData)">Войти</button>
             </modal-footer>
         </modal>
         `
@@ -31,8 +31,8 @@ export class AuthorizationComponent {
         private userService: UserService
     ){}
 
-    singUp(obj: {email: string, password: string}){
-        this.httpService.singUp(obj)
+    logIn(obj: {email: string, password: string}){
+        this.httpService.logIn(obj)
             .then(
                 (data) => {
                     this.userService.setUser(data);

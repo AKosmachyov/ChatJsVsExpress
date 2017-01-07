@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Ng2Bs3ModalModule } from 'ng2bs3modal/ng2-bs3-modal';
-import { HttpService} from '../services/http.service.ts';
-import {UserService} from  '../services/user.service.ts';
+import { HttpService} from '../services/http.service';
+import {UserService} from  '../services/user.service';
 
 @Component({
     selector: 'sing-up',
