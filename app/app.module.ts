@@ -4,13 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule }   from '@angular/http';
 import { Ng2Bs3ModalModule } from 'ng2bs3modal/ng2-bs3-modal';
 
-import { AppComponent } from './app.component';
-import { TopBarComponent } from './top-bar.component';
-import { RegistrationComponent } from './registration.component';
-import { AuthorizationComponent } from './authorization.component';
+import { AppComponent } from './components/app.component.ts';
+import { TopBarComponent } from './components/top-bar.component.ts';
+import { RegistrationComponent } from './components/registration.component.ts';
+import { AuthorizationComponent } from './components/authorization.component.ts';
 
-import { UserService } from './user.service';
-import { HttpService } from  './http.service';
+import { UserService } from './services/user.service.ts';
+import { HttpService } from  './services/http.service.ts';
 
 @NgModule({
     imports: [

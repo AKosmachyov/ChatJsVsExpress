@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
-import { User } from './user';
+import { User } from '../classes/user';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
