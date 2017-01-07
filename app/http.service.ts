@@ -1,5 +1,6 @@
-import {Injectable} from '@angular/core';
-import {Http, Headers, RequestOptions} from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import { User } from './user';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/toPromise';
@@ -15,6 +16,15 @@ export class HttpService{
         let options = new RequestOptions({ headers: headers });
 
         return this.http.post('/profile/register', body, options )
+            .toPromise()
+            .then(this.extractData)
+            .catch(this.handleError);
+    }
+    logIn(obj: {email: string, password: string}): Promise<User>{
+        const body = JSON.stringify(obj);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post('/profile/login', body, options )
             .toPromise()
             .then(this.extractData)
             .catch(this.handleError);

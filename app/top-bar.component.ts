@@ -11,7 +11,7 @@ import  {User} from '/user';
         <div class="top-bar-right">
             <div class="block-link" *ngIf="!user.userName">
                 <a class="authorization-link" (click)="singUpWindow.open()">Регистрация</a>
-                <a class="authorization-link">Вход</a>
+                <a class="authorization-link" (click)="logInWindow.open()">Вход</a>
             </div>
             <div class="user-bar" *ngIf="user.userName">
                 <div>
@@ -19,8 +19,9 @@ import  {User} from '/user';
                     <img src={{user.avatarLink}} class="img-circle">
                 </div>                
             </div>
-        </div> 
+        </div>         
         <sing-up #singUpWindow></sing-up>
+        <log-in #logInWindow></log-in>
         `,
     styles: [`
         .block-link {

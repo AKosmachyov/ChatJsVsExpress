@@ -7,8 +7,10 @@ import { Ng2Bs3ModalModule } from 'ng2bs3modal/ng2-bs3-modal';
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar.component';
 import { RegistrationComponent } from './registration.component';
+import { AuthorizationComponent } from './authorization.component';
 
-import {UserService} from './user.service'
+import { UserService } from './user.service';
+import { HttpService } from  './http.service';
 
 @NgModule({
     imports: [
@@ -20,10 +22,14 @@ import {UserService} from './user.service'
     declarations: [
         AppComponent,
         TopBarComponent,
-        RegistrationComponent
+        RegistrationComponent,
+        AuthorizationComponent
     ],
     bootstrap: [ AppComponent ],
-    providers: [UserService]
+    providers: [
+        UserService,
+        HttpService        
+    ]
 })
 
 export class AppModule { }
