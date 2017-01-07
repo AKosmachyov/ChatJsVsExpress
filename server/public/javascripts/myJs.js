@@ -4,7 +4,7 @@
     app.controller('getmessageAllUser', function ($scope) {
         var block = window.document.getElementsByClassName("messageViewArea")[0] || {};
 
-        $scope.getNameUser = $chat.getNameUser;
+        $scope.getUserName = $chat.getUserName;
         $scope.isAuthorize = $chat.isAuthorize;
         var socket;
         var messageFull;
@@ -41,9 +41,8 @@
             if (value.length > 0) {
                 var newValue = value.replace(/\s+/g, '');
                 if ($chat.isAuthorize() && newValue.length >= 1) {
-                    messageFull = {
-                        //user: $chat.getNameUser(),
-                        user: $chat.getIdUser(),
+                    messageFull = {                       
+                        user: $chat.getUserName(),
                         message: value,
                         date: new Date()
                     };
@@ -76,7 +75,7 @@
         }
 
         $scope.isAuthorize = $chat.isAuthorize;
-        $scope.getNameUser = $chat.getNameUser;
+        $scope.getUserName = $chat.getUserName;
 
         $scope.logOut = function () {
             $chat.logOut(up);
@@ -127,7 +126,7 @@
         $scope.toggle = function () {
             $scope.checked = !$scope.checked
         };
-        $scope.numberOfOnlineUsers = $chat.numberOfOnlineUsers;
+        $scope.countOnlineUsers = $chat.countOnlineUsers;
 
     }]);
     app.controller('profileCtrl', function ($scope) {

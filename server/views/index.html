@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Чат</title>
+    <script type='text/javascript' src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type='text/javascript' src="bower_components/angular/angular.min.js"></script>
+    <script type='text/javascript' src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/stylesheets/index.css">
+</head>
+<body class="container-fluid" ng-app='Chat'>
+<div class="row" style="height: 100vh">
+    <div class="hidden-xs col-sm-3 navigation-bar">
+        <div class="form-inline search-element" >
+            <input type="text" class="form-control">
+            <button type="button" class="btn btn-default">
+                <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div>
+            private room
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-9 message-block">
+        <div class="top-bar">
+            <div class="top-bar-left">
+                to NickName
+            </div>
+            <div class="top-bar-center">
+                logo
+            </div>
+            <div class="top-bar-right">
+                <a class="authorization-link">Регистрация</a>
+                <a class="authorization-link">Вход</a>
+            </div>
+        </div>
+        <div class="message-list ">
+            message
+        </div>
+        <div class="input-box">
+            <textarea></textarea>
+        </div>
+    </div>
+</div>
+</body>
+</html>

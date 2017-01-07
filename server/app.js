@@ -3,8 +3,6 @@ var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var file=require(__dirname+'/model/handlerFile');
-var multer  = require('multer');
 var profile = require('./route/profile.js');
 var room = require('./route/room.js');
 
@@ -14,26 +12,20 @@ app.set('view engine', 'ejs');
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(cookieParser());
-app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+app.set('views', path.join(__dirname, 'views/'));
+app.use('/node_modules' ,express.static(path.join(__dirname, '../node_modules')));
+app.use('/app', express.static(path.join(__dirname, '../app')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res) {
-       res.sendFile(path.join(__dirname + '/views/index.html'));
+       res.sendFile('index.html', { root: './app' });
+});
+app.get('/systemjs.config.js', function(req, res) {
+    res.sendFile('systemjs.config.js', { root: './' });
 });
 
 app.use('/profile', profile);
 app.use('/room', room);
-
-var storage =  multer.diskStorage({
-    destination: function (req, file, callback) {
-        callback(null, './public/images');
-    },
-    filename: function (req, file, callback) {
-        callback(null, Date.now()+ '-' + file.originalname);
-    }
-});
-
-var upload = multer({ storage : storage}).single('recfile');
 
 app.post('/photo',function(req,res){
     upload(req,res,function(err) {
@@ -77,4 +69,3 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
-

@@ -1,13 +1,8 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
-
 var app = require('../app');
 var debug = require('debug')('ExpressChatJs:server');
 var http = require('http');
-var file=require('../model/handlerFile');
 const dataBase = require('../model/DB.js')
 
 var sockets = [];
@@ -45,11 +40,16 @@ process.on('SIGINT', function() {
             });
 
             server.close(function () {
-              console.log('Stop server event starting');
+              console.log('Stop server event');
               process.exit(0);
             });
-          }
-      );
+      }, function (err) {
+          if(err.message == 'ns not found')
+            server.close(function () {
+              console.log('Stop server event');
+              process.exit(0);
+            });
+      })
 });
 
 /**
