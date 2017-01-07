@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar.component';
 import { RegistrationComponent } from './registration.component';
 
+import {UserService} from './user.service'
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -20,7 +22,8 @@ import { RegistrationComponent } from './registration.component';
         TopBarComponent,
         RegistrationComponent
     ],
-    bootstrap: [ AppComponent ]
+    bootstrap: [ AppComponent ],
+    providers: [UserService]
 })
 
 export class AppModule { }

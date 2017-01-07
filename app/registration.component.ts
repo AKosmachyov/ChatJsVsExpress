@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Ng2Bs3ModalModule } from 'ng2bs3modal/ng2-bs3-modal';
 import { HttpService} from './http.service';
+import {UserService} from  './user.service';
 
 import  {User} from '/user';
 
@@ -25,22 +26,28 @@ import  {User} from '/user';
 })
 export class RegistrationComponent {
     @ViewChild('singUpModal')
-    modal: ModalComponent;
-    
-    constructor(private httpService: HttpService){}
-    
-    user: User = {};
+    modal: ModalComponent;    
     singUpData: {userName: string, email: string, password: string} = {};
     errorMessage: any;
+    
+    constructor(
+        private httpService: HttpService,
+        private userService: UserService
+    ){}
+    
     
     singUp(obj: {userName: string, email: string, password: string}){
         this.httpService.singUp(obj)
             .then(
-                avatarLink => {
-                    this.user.avatarLink = avatarLink;
-                    this.user.userName = obj.userName;
+                (data) => {
+                    this.userService.setUser({
+                        userName: obj.userName,
+                        avatarLink: data.avatarLink
+                    });
+                    this.singUpData = {};
+                    this.close();
                 },
-                error =>  this.errorMessage = <any>error
+                (error) =>  this.errorMessage = <any>error
             )
     };    
     open(){
