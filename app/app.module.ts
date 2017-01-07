@@ -8,6 +8,9 @@ import { AppComponent } from './components/app.component';
 import { TopBarComponent } from './components/top-bar.component';
 import { RegistrationComponent } from './components/registration.component';
 import { AuthorizationComponent } from './components/authorization.component';
+import { MessageFieldComponent } from './components/message-field.component';
+import { MessageBox } from './components/message-box.component';
+import { MessageComponent } from './components/message.component';
 
 import { UserService } from './services/user.service';
 import { HttpService } from  './services/http.service';
@@ -23,7 +26,10 @@ import { HttpService } from  './services/http.service';
         AppComponent,
         TopBarComponent,
         RegistrationComponent,
-        AuthorizationComponent
+        AuthorizationComponent,
+        MessageFieldComponent,
+        MessageBox,
+        MessageComponent
     ],
     bootstrap: [ AppComponent ],
     providers: [
