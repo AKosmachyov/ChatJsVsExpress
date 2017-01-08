@@ -14,6 +14,7 @@ import { MessageComponent } from './components/message.component';
 
 import { UserService } from './services/user.service';
 import { HttpService } from  './services/http.service';
+import {SocketService} from './services/socket.service';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { HttpService } from  './services/http.service';
     bootstrap: [ AppComponent ],
     providers: [
         UserService,
-        HttpService        
+        HttpService,
+        SocketService
     ]
 })
 

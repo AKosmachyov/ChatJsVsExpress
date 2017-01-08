@@ -18,6 +18,9 @@ import { TopBar } from './top-bar.component';
             border-top: 1.5px solid #d1cbcb;
             display: flex;
         }
+        .message-list {
+            overflow: auto;
+        }
     `]
 })
 export class AppComponent {

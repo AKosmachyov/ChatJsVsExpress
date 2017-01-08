@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 
+import { SocketService } from '../services/socket.service';
+
 @Component({
     selector: 'message-box',
     template: `
         <div class="main-div">
-            <textarea></textarea>
-            <button>Отправить</button>           
+            <textarea [(ngModel)]="text"></textarea>
+            <button (click)="send()">Отправить</button>           
         </div>
     `,
     styles: [`
@@ -24,4 +26,12 @@ import { Component } from '@angular/core';
         }
     `]
 })
-export class MessageBox { }
+export class MessageBox {
+    text: string;
+    
+    constructor(private socketService: SocketService){};
+    send(){
+        this.socketService.sendMessage(this.text);
+        this.text = '';
+    }
+}
