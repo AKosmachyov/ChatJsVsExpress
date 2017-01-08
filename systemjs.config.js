@@ -5,7 +5,7 @@
     },   
     map: {      
       app: 'app',
-      
+
       '@angular/core': 'npm:@angular/core/bundles/core.umd.js',
       '@angular/common': 'npm:@angular/common/bundles/common.umd.js',
       '@angular/compiler': 'npm:@angular/compiler/bundles/compiler.umd.js',
@@ -17,7 +17,8 @@
       
       'rxjs':                      'npm:rxjs',
       'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
-      'ng2bs3modal': 'npm:ng2-bs3-modal'
+      'ng2bs3modal': 'npm:ng2-bs3-modal',
+      'ng2dropdown': 'node_modules/ng2-dropdown'
     },
     
     packages: {
@@ -30,6 +31,10 @@
       },
       ng2bs3modal: {
         defaultExtension: 'js'
+      },
+      ng2dropdown: {
+        "main": "index.js",
+        "defaultExtension": "js"
       }
     }
   });

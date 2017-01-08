@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpModule }   from '@angular/http';
 import { Ng2Bs3ModalModule } from 'ng2bs3modal/ng2-bs3-modal';
+import {DropdownModule} from "ng2dropdown";
 
 import { AppComponent } from './components/app.component';
 import { TopBarComponent } from './components/top-bar.component';
@@ -21,7 +22,8 @@ import {SocketService} from './services/socket.service';
         BrowserModule,
         FormsModule,
         Ng2Bs3ModalModule,
-        HttpModule
+        HttpModule,
+        DropdownModule
     ],
     declarations: [
         AppComponent,

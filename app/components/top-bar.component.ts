@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {DropdownModule} from "ng2dropdown";
 import { UserService } from '../services/user.service';
 
 import  {User} from '/user';
@@ -15,8 +16,17 @@ import  {User} from '/user';
             </div>
             <div class="user-bar" *ngIf="user.userName">
                 <div>
-                    <span>{{user.userName}}</span>
                     <img src={{user.avatarLink}} class="img-circle">
+                    <div class="dropdown" dropdown>
+                    <span dropdown-open>
+                        {{user.userName}}
+                        <span class="caret"></span>
+                    </span>                        
+                        <ul class="dropdown-menu">
+                            <li><a>Профиль</a></li>
+                            <li><a>Выйти</a></li>
+                        </ul>
+                    </div>
                 </div>                
             </div>
         </div>         
@@ -32,7 +42,13 @@ import  {User} from '/user';
             display: flex;
             width: 100%;
         }        
-        img { height: 35px }        
+        img { height: 35px }
+        .user-bar > div {
+            flex-direction: row;
+            display: flex;
+            align-items: center;
+            margin: auto;
+        }
     `]
 })
 export class TopBarComponent {
