@@ -29,6 +29,15 @@ export class HttpService{
             .then(this.extractData)
             .catch(this.handleError);
     }
+    logOut(userName:string): Promise<>{
+        const body = JSON.stringify({userName: userName});
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post('/room/logout', body, options )
+            .toPromise()
+            .then(this.extractData)
+            .catch(this.handleError);
+    }
     private extractData(res: Response) {
         let body = res.json();
         return body || { };

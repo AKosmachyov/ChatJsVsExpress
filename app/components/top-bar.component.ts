@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {DropdownModule} from "ng2dropdown";
 import { UserService } from '../services/user.service';
+import { HttpService } from '../services/http.service';
 
 import  {User} from '/user';
 
@@ -24,7 +25,7 @@ import  {User} from '/user';
                     </span>                        
                         <ul class="dropdown-menu">
                             <li><a>Профиль</a></li>
-                            <li><a>Выйти</a></li>
+                            <li (click)="logOut()"><a>Выйти</a></li>
                         </ul>
                     </div>
                 </div>                
@@ -52,6 +53,14 @@ import  {User} from '/user';
     `]
 })
 export class TopBarComponent {
-    constructor(private userService: UserService){}
+    constructor(
+        private userService: UserService,
+        private httpService: HttpService 
+    ){}
     user: User = this.userService.getUser();
+    logOut(){
+        this.httpService.logOut(this.user.userName);
+        this.user.avatarLink = '';
+        this.user.userName = '';        
+    }
 }
