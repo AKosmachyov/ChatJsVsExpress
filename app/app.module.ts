@@ -12,6 +12,7 @@ import { AuthorizationComponent } from './components/authorization.component';
 import { MessageFieldComponent } from './components/message-field.component';
 import { MessageBox } from './components/message-box.component';
 import { MessageComponent } from './components/message.component';
+import { RoomBarComponent } from './components/room.component';
 
 import { UserService } from './services/user.service';
 import { HttpService } from  './services/http.service';
@@ -32,7 +33,8 @@ import {SocketService} from './services/socket.service';
         AuthorizationComponent,
         MessageFieldComponent,
         MessageBox,
-        MessageComponent
+        MessageComponent,
+        RoomBarComponent
     ],
     bootstrap: [ AppComponent ],
     providers: [

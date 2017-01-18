@@ -5,7 +5,7 @@ import { TopBar } from './top-bar.component';
 @Component({
     selector: 'my-app',
     template: `
-        <div class="hidden-xs col-sm-3 navigation-bar"></div>
+        <room-bar class="hidden-xs col-sm-3 navigation-bar"></room-bar>
         <div class="col-xs-12 col-sm-9 message-block">                 
             <top-bar class="top-bar"></top-bar>
             <message-field class="message-list "></message-field>
