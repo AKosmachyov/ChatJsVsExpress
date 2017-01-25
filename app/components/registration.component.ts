@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Ng2Bs3ModalModule } from 'ng2bs3modal/ng2-bs3-modal';
-import { HttpService} from './http.service';
-import {UserService} from  './user.service';
-
-import  {User} from '/user';
+import { HttpService} from '../services/http.service';
+import {UserService} from  '../services/user.service';
 
 @Component({
     selector: 'sing-up',
@@ -21,8 +19,7 @@ import  {User} from '/user';
                 <button type="button" class="btn btn-primary" (click)="singUp(singUpData)">Отправить</button>
             </modal-footer>
         </modal>
-        `,
-    providers: [HttpService]
+        `
 })
 export class RegistrationComponent {
     @ViewChild('singUpModal')
@@ -34,7 +31,6 @@ export class RegistrationComponent {
         private httpService: HttpService,
         private userService: UserService
     ){}
-    
     
     singUp(obj: {userName: string, email: string, password: string}){
         this.httpService.singUp(obj)
