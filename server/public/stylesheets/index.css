@@ -38,18 +38,6 @@
     flex:1;
     background-color: white;
 }
-.input-box {
-    height: 60px;
-    border-top: 1.5px solid #d1cbcb;
-    display: flex;
-}
-textarea {
-    width: 80%;
-    margin: auto;
-    resize: none;
-    font-size: 17px;
-    height: 30px;
-}
 .authorization-link {
     margin: auto;
 }

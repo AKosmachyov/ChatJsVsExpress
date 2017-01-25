@@ -12,7 +12,7 @@ router.post('/onlineUsers',function(req,res){
 router.post('/logout', urlencodedParser,function(req,res){
     dataBase.deleteOnlineUser(req.body)
         .then(function () {
-            res.send("Successful")
+            res.send({message: "Successful"})
         }).catch(function (err) {
             res.status(400).send(err.message)
     })
