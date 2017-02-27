@@ -33,23 +33,13 @@ server.on('listening', onListening);
 
 process.on('SIGINT', function() {
   console.log('key determinate detected');
-  dataBase.dropOnlineUsers()
-      .then(function () {
-            sockets.forEach(function (socet) {
-              socet.destroy();
-            });
-
-            server.close(function () {
-              console.log('Stop server event');
-              process.exit(0);
-            });
-      }, function (err) {
-          if(err.message == 'ns not found')
-            server.close(function () {
-              console.log('Stop server event');
-              process.exit(0);
-            });
-      })
+  sockets.forEach(function (socet) {
+    socet.destroy();
+  });
+  server.close(function () {
+    console.log('Stop server event');
+    process.exit(0);
+  });
 });
 
 /**
