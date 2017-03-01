@@ -68,14 +68,15 @@ const Storage = {
                 }
             })
     },
-    userLogOut: function (user) {
-        if(!(!!user && !!user.id)){
+    userLogOut: function (token) {
+        if(!(!!token)){
             return Promise.reject(new Error("User entity is incorrect"));
         }
-        return collectUsers.findOneAndUpdate({id: user.id}, {$set: {isOnline: false}})
+        return collectUsers.findOneAndUpdate({token: token}, {$set: {isOnline: false}})
             .then(function (val) {
                 if(val.lastErrorObject.n != 1)
                     return Promise.reject(new Error("Error logOut"));
+                return;
             })
 
     },

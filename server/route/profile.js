@@ -19,12 +19,11 @@ router.post('/register', function(req,res){
     });
 });
 router.post('/logout', function(req,res){
-    // dataBase.userLogOut(req.body).then(function () {
-    //     res.send("Success");
-    // }).catch(function (err) {
-    //     res.status(400).send(err.message);
-    // });
-    res.status(400).send('Not ready');
+    dataBase.userLogOut(req.cookies.token).then(function () {
+        res.send("Success");
+    }).catch(function (err) {
+        res.status(400).send(err.message);
+    });
 });
 router.post('/changePassword', function(req,res) {
     // dataBase.changePassword(req.body)
