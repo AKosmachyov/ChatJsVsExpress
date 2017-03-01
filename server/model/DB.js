@@ -2,7 +2,7 @@ const MongoClient = require('mongodb').MongoClient
     , assert = require('assert');
 const url = 'mongodb://localhost:27017/Chat';
 const User = require('./User.js');
-const Conversation = require('./Conversation.js');
+const Room = require('./Room.js');
 const Message = require('./Message.js');
 var collectUsers, collectRooms, collectMessages;
 
@@ -28,6 +28,7 @@ const Storage = {
     singUp: function (user) {
         if (!isValidUserRegister(user))
             return Promise.reject(new Error("User entity is incorrect"));
+        user.email = user.email.toLowerCase();
         return collectUsers.find({email: user.email}).count()
             .then(function (count) {
                 if (count || 0 > 0) {
@@ -48,6 +49,7 @@ const Storage = {
     logIn: function (user) {
         if(!isValidUserLogin(user))
             return Promise.reject(new Error("User entity is incorrect"));
+        user.email = user.email.toLowerCase();
         return collectUsers.find(user).next()
             .then(function (val) {
                 if (val === null)
@@ -57,9 +59,12 @@ const Storage = {
                 if(val.lastErrorObject.n != 1)
                     return Promise.reject(new Error("Error logOut"));
                 return {
-                    id: val.value.id,
-                    userName: val.value.userName,
-                    avatarLink: val.value.avatarLink
+                    user: {
+                        id: val.value.id,
+                        userName: val.value.userName,
+                        avatarLink: val.value.avatarLink
+                    },
+                    token: val.value.token
                 }
             })
     },
@@ -72,6 +77,9 @@ const Storage = {
                 if(val.lastErrorObject.n != 1)
                     return Promise.reject(new Error("Error logOut"));
             })
+
+    },
+    createNewRoom: function (id) {
 
     },
     // userId, roomId

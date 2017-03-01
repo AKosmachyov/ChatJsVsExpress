@@ -1,5 +1,5 @@
 let file = require('../config.json');
-const counterId = file.userId;
+var counterId = file.userId;
 const crypto = require('crypto');
 
 function getNewToken(str) {
@@ -9,7 +9,7 @@ function getNewToken(str) {
 }
 function getUTCstr() {
     let time = new Date();
-    return [time.getUTCFullYear(), time.getUTCMonth(), time.getUTCDay(), time.getUTCHours(), time.getUTCMinutes()].join('-');
+    return [time.getUTCFullYear(), time.getUTCMonth(), time.getUTCDate(), time.getUTCHours(), time.getUTCMinutes()].join('-');
 }
 const User = function ({userName, email, password}) {
     let date = getUTCstr();
