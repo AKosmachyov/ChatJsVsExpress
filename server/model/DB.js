@@ -24,7 +24,7 @@ function isValidEmail(email) {
     return (/\S+@\S+\.\S+/).test(email);
 }
 
-var Storage = {
+const Storage = {
     singUp: function (user) {
         if (!isValidUserRegister(user))
             return Promise.reject(new Error("User entity is incorrect"));
@@ -36,7 +36,11 @@ var Storage = {
                 return collectUsers.insertOne(new User(user))
                     .then(function(val){
                         return {
-                            avatarLink: val.ops[0].avatarLink
+                            user: {
+                                avatarLink: val.ops[0].avatarLink,
+                                id: val.ops[0].id
+                            },
+                            token: val.ops[0].token,
                         }
                     });
             });

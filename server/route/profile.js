@@ -1,6 +1,6 @@
-var express = require('express');
-var router = express.Router();
-var dataBase=require('../model/DB.js');
+const express = require('express');
+const router = express.Router();
+const dataBase=require('../model/DB.js');
 
 router.post('/login', function(req,res){
     dataBase.logIn(req.body).then(function (val) {
@@ -11,8 +11,10 @@ router.post('/login', function(req,res){
         //app.get('io').emit('sendOnlineUser',temp);//return name User who add in chat for other user
 });
 router.post('/register', function(req,res){
-    dataBase.singUp(req.body).then(function (temp) {
-        res.send(temp);
+    dataBase.singUp(req.body).then(function (obj) {
+        res.cookie('token', obj.token, { maxAge: 432000000, httpOnly: true });
+        res.send(obj.user);
+
         //app.get('io').emit('sendOnlineUser',temp)
     }).catch(function (err) {
         res.status(400).send(err.message);

@@ -1,11 +1,17 @@
 let file = require('../config.json');
-var counterId = file.userId;
+const counterId = file.userId;
+const crypto = require('crypto');
 
+function getNewToken(str) {
+    let hash = crypto.createHash('sha256');
+    hash.update(str + new Date());
+    return hash.digest('hex');
+}
 function getUTCstr() {
     let time = new Date();
     return [time.getUTCFullYear(), time.getUTCMonth(), time.getUTCDay(), time.getUTCHours(), time.getUTCMinutes()].join('-');
 }
-var User = function ({userName, email, password}) {
+const User = function ({userName, email, password}) {
     let date = getUTCstr();
     return {
         id: counterId++,
@@ -13,14 +19,11 @@ var User = function ({userName, email, password}) {
         email: email,
         password: password,
         avatarLink: "images/logo.jpg",
-        lastVisit: ,
-        isOnline: trudatee,
+        lastVisit: date,
+        isOnline: true,
         ownRooms: [],
         inRooms: [],
-        token: {
-            token: '123',
-            date: date
-        }
+        token: getNewToken(`{userName}{counterId}`)
     }
 };
 
