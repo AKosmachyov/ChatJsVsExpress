@@ -78,10 +78,27 @@ const Storage = {
                     return Promise.reject(new Error("Error logOut"));
                 return;
             })
-
     },
-    createNewRoom: function (id) {
-
+    createRoom: function (token) {
+        if(!token){
+            return Promise.reject(new Error("User entity is incorrect"));
+        }
+        var room = 5 ;
+        return collectUsers.find({token: token}).next()
+            .then(function (val ) {
+                if (val === null)
+                    throw new Error("You aren't authorize");
+                return val.id;
+            }).then(function (id) {
+                return collectRooms.insertOne(new Room(id));
+            }).then(function (val) {
+                room = val.ops[0];
+                return collectUsers.findOneAndUpdate({token: token}, {$push: {ownRooms: val.ops[0].id}})
+            }).then(function (val) {
+                if(val.ok != 1)
+                    return Promise.reject(new Error("Error adding room"));
+                return room;
+            })
     },
     // userId, roomId
     connectToRoom: function (objId) {

@@ -33,7 +33,7 @@ export class HttpService{
         const body = JSON.stringify({userName: userName});
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        return this.http.post('/room/logout', body, options )
+        return this.http.post('/profile/logout', body, options )
             .toPromise()
             .then(this.extractData)
             .catch(this.handleError);

@@ -2,11 +2,19 @@ const express = require('express');
 const router = express.Router();
 const dataBase=require('../model/DB.js');
 
-router.post('/onlineUsers',function(req,res){
-    dataBase.getOnlineUser()
+router.post('/create', function (req, res) {
+    dataBase.createRoom(req.cookies.token)
         .then(function (val) {
-            res.send(JSON.stringify(val));
-        })
+            res.send(val);
+        }).catch(function (err) {
+            res.status(400).send(err.message);
+      })
+});
+router.post('/onlineUsers',function(req,res){
+    // dataBase.getOnlineUser()
+    //     .then(function (val) {
+    //         res.send(JSON.stringify(val));
+    //     })
     res.status(400).send('Not ready')
 });
 router.post('/logout',function(req,res){
