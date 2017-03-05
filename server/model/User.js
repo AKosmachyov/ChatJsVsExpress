@@ -1,5 +1,4 @@
-let file = require('../config.json');
-var counterId = file.userId;
+const DBconfig = require('./DBconfig.js');
 const crypto = require('crypto');
 
 function getNewToken(str) {
@@ -14,7 +13,7 @@ function getUTCstr() {
 const User = function ({userName, email, password}) {
     let date = getUTCstr();
     return {
-        id: counterId++,
+        id: DBconfig.getUserId(),
         userName: userName,
         email: email,
         password: password,

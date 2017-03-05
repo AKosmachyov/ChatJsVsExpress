@@ -8,7 +8,7 @@ var collectUsers, collectRooms, collectMessages;
 
 MongoClient.connect(url, function(err, db) {
     assert.equal(null, err);
-    console.log("Connected");
+    console.log("Connected to DB");
     collectUsers = db.collection('Users');
     collectRooms = db.collection('Rooms');
     collectMessages = db.collection('Messages');

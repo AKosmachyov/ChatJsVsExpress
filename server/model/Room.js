@@ -1,9 +1,9 @@
-let file = require('../config.json');
-var counterId = file.roomId;
+const DBconfig = require('./DBconfig.js');
 
 const Room = function (userId) {
+    let counterId = DBconfig.getRoomId();
     return {
-        id: counterId++,
+        id: counterId,
         title: `room-${counterId}`,
         adminId: userId,
         onlineUsers: [],
