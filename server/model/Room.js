@@ -6,7 +6,7 @@ const Room = function (userId) {
         id: counterId,
         title: `room-${counterId}`,
         adminId: userId,
-        onlineUsers: [],
+        onlineUsers: [userId],
         imgLink: 'images/logo.jpg'
     }
 };

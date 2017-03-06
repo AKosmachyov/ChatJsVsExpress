@@ -83,28 +83,71 @@ const Storage = {
         if(!token){
             return Promise.reject(new Error("User entity is incorrect"));
         }
-        var room = 5 ;
+        var obj;
         return collectUsers.find({token: token}).next()
             .then(function (val ) {
                 if (val === null)
                     throw new Error("You aren't authorize");
+                obj = {
+                    userId: val.id
+                };
                 return val.id;
             }).then(function (id) {
                 return collectRooms.insertOne(new Room(id));
             }).then(function (val) {
-                room = val.ops[0];
-                return collectUsers.findOneAndUpdate({token: token}, {$push: {ownRooms: val.ops[0].id}})
+                obj.room = val.ops[0];
+                return collectUsers.findOneAndUpdate({token: token}, {$push: {ownRooms: val.ops[0].id, inRooms: val.ops[0].id}})
             }).then(function (val) {
                 if(val.ok != 1)
                     return Promise.reject(new Error("Error adding room"));
-                return room;
+                return obj.room;
             })
     },
-    // userId, roomId
-    connectToRoom: function (objId) {
-        if(!(!!objId && !!objId.userId && !!objId.roomId))
+    connectToRoom: function (token, obj) {
+        if(!token && !obj && !obj.roomId)
             return Promise.reject(new Error("User entity is incorrect"));
-        return collectRooms.findOneAndUpdate({id: objId.roomId}, {$push: {}})
+        return collectUsers.find({token: token}).next()
+            .then(function (val) {
+                if (val == null)
+                    throw new Error("You aren't authorize");
+                obj.userId = val.id;
+                return val.id;
+            }).then(function (id) {
+                return collectRooms.findOneAndUpdate({id: obj.roomId}, {$push: {onlineUsers: id}});
+            }).then(function (val) {
+                if(val.ok != 1 && !val.value)
+                    return Promise.reject(new Error("Error connect to room"));
+                obj.room = {
+                    imgLink: val.value.imgLink,
+                    onlineUsers: val.value.onlineUsers
+                };
+                return collectUsers.findOneAndUpdate({id: obj.userId}, {$push: {inRooms: obj.roomId}});
+            }).then(function (val) {
+                if(val.ok != 1)
+                    return Promise.reject(new Error("Error connect to room"));
+                return obj.room;
+            })
+    },
+    disconnectFromRoom: function (token, obj) {
+        if(!token && !obj && !obj.roomId)
+            return Promise.reject(new Error("User entity is incorrect"));
+        return collectUsers.find({token: token}).next()
+            .then(function (val) {
+                if (val == null)
+                    throw new Error("You aren't authorize");
+                obj.userId = val.id;
+                return val.id;
+            }).then(function (id) {
+                return collectRooms.findOneAndUpdate({id: obj.roomId}, {$pull: {onlineUsers: id}});
+            }).then(function (val) {
+                if(val.ok != 1)
+                    return Promise.reject(new Error("Error disconnect to room"));
+                return collectUsers.findOneAndUpdate({id: obj.userId}, {$pull: {inRooms: obj.roomId}});
+            }).then(function (val) {
+                if(val.ok != 1)
+                    return Promise.reject(new Error("Error connect to room"));
+                return;
+            })
     },
     changePassword: function(user) {
         if (!(!!user && !!user.userName && !!user.password && !!user.newPassword))
@@ -116,8 +159,19 @@ const Storage = {
                 return;
         });
     },
-    getOnlineUser: function () {
-        return collectRooms.find({}, {_id: 0}).toArray();
+    getRooms: function (token) {
+        if(!token)
+            return Promise.reject(new Error("User entity is incorrect"));
+        return collectUsers.find({token: token}).next()
+            .then(function (val) {
+                if (val == null)
+                    throw new Error("You aren't authorize");
+            }).then(function () {
+                return collectRooms.find({}, {_id: 0}).limit(10).toArray();
+            });
+    },
+    normaliseDB: function () {
+
     }
 };
 
